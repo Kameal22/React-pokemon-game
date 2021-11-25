@@ -17,7 +17,7 @@ function PokemonList() {
       const response = await axios.get(API_URL);
       const fetchedUrl = response.data.results.map((poke) => poke.url);
 
-      fetchedUrls.url = fetchedUrl;
+      fetchedUrls.push(fetchedUrl);
 
       axios.all(fetchedUrl.map((url) => axios.get(url))).then(
         axios.spread(function (...res) {
