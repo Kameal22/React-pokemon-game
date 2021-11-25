@@ -19,3 +19,13 @@
   display: flex;
   justify-content: space-around;
 }
+
+.startBtn {
+  width: 15%;
+  height: 6%;
+  margin-bottom: 3vh;
+  background-color: transparent;
+  color: ivory;
+  border-color: yellow;
+  border-radius: 10px;
+}

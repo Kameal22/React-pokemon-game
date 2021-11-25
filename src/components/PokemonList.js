@@ -37,9 +37,11 @@ function PokemonList() {
     axios.all(tempUsersChoice.map((choice) => axios.get(choice))).then(
       axios.spread(function (...res) {
         res.forEach((poke) => {
-          images.push(poke.data.sprites.front_default);
-          setUserChoice([images]);
+          if (!images.includes(poke.data.sprites.front_default)) {
+            images.push(poke.data.sprites.front_default);
+          }
         });
+        setUserChoice(images);
       })
     );
   };
@@ -53,7 +55,9 @@ function PokemonList() {
         })}
       </div>
       {start ? null : (
-        <button onClick={showStarterPokes}>Start the game</button>
+        <button className="startBtn" onClick={showStarterPokes}>
+          Start the game
+        </button>
       )}
     </div>
   );
