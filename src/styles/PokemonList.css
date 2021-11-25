@@ -1,0 +1,21 @@
+.mainDiv {
+  border: 2px solid ivory;
+  width: 50%;
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mainHeading {
+  color: yellow;
+  letter-spacing: 1px;
+}
+
+.pokeChoiceDiv {
+  color: white;
+  width: 50%;
+  display: flex;
+  justify-content: space-around;
+}
