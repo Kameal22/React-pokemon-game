@@ -11,39 +11,36 @@ function PokemonList() {
 
   useEffect(() => {
     async function fetchPokemons() {
-      const fetchedPokemons = {};
+      const fetchedUrls = [];
+      const details = [];
 
       const response = await axios.get(API_URL);
-      const fetchedNames = response.data.results.map((poke) => poke.name);
-      const fetchedDetails = response.data.results.map((poke) => poke.url);
+      const fetchedUrl = response.data.results.map((poke) => poke.url);
 
-      fetchedPokemons.names = fetchedNames;
-      fetchedPokemons.details = fetchedDetails;
+      fetchedUrls.url = fetchedUrl;
 
-      setPokemonList(fetchedPokemons);
+      axios.all(fetchedUrl.map((url) => axios.get(url))).then(
+        axios.spread(function (...res) {
+          res.forEach((pokemon) => {
+            if (!details.includes(pokemon.data.sprites.front_default)) {
+              details.push(pokemon.data.sprites.front_default);
+            }
+          });
+          setPokemonList(details);
+        })
+      );
     }
     fetchPokemons();
   }, []);
 
   const showStarterPokes = () => {
-    const tempUsersChoice = [];
-
-    while (tempUsersChoice.length < 3) {
-      let randInt = Math.floor(Math.random() * pokemonList.details.length);
-      tempUsersChoice.push(pokemonList.details[randInt]);
-    }
     const images = [];
 
-    axios.all(tempUsersChoice.map((choice) => axios.get(choice))).then(
-      axios.spread(function (...res) {
-        res.forEach((poke) => {
-          if (!images.includes(poke.data.sprites.front_default)) {
-            images.push(poke.data.sprites.front_default);
-          }
-        });
-        setUserChoice(images);
-      })
-    );
+    while (images.length < 3) {
+      let randInt = Math.floor(Math.random() * pokemonList.length);
+      images.push(pokemonList[randInt]);
+    }
+    setUserChoice(images);
   };
 
   return (
@@ -55,7 +52,7 @@ function PokemonList() {
         })}
       </div>
       {start ? null : (
-        <button className="startBtn" onClick={showStarterPokes}>
+        <button onClick={showStarterPokes} className="startBtn">
           Start the game
         </button>
       )}
