@@ -1,11 +1,14 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import "../styles/PokemonList.css";
+import { Link } from "react-router-dom";
 
 const API_URL = "https://pokeapi.co/api/v2/pokemon/?limit=100&offset=0";
 
 function PokemonList() {
   const [start, setStart] = useState(false);
+  const [pokemonChoice, setPokemonChoice] = useState(false);
+  const [chosenPokemon, setChosenPokemon] = useState(false); // Somehow pass chosen pokemon to UserView Component and send user there!!!!!!!!
   const [pokemonList, setPokemonList] = useState({});
   const [userChoice, setUserChoice] = useState([]);
 
@@ -38,21 +41,44 @@ function PokemonList() {
       images.push(pokemonList[randInt]);
     }
     setUserChoice(images);
+    setStart(true);
+  };
+
+  const chooseStarterPokemon = () => {
+    setPokemonChoice(true);
   };
 
   return (
     <div className="mainDiv">
-      <h1 className="mainHeading">Poke game</h1>
+      {pokemonChoice ? (
+        <div className="NavLinks">
+          <Link to="/Pokedex">Pokedex</Link>
+          <Link to="/Equipment">Equipment</Link>
+          <Link to="/Character">Character</Link>
+        </div>
+      ) : (
+        <h1 className="mainHeading">
+          {start ? "Choose Your pokemon" : "Press start"}
+        </h1>
+      )}
       <div className="pokeChoiceDiv">
         {userChoice.map((pokemon) => {
-          return <img src={pokemon}></img>;
+          return (
+            <img
+              src={pokemon}
+              onClick={chooseStarterPokemon}
+              className="firstChoiceImgs"
+            ></img>
+          );
         })}
       </div>
-      {start ? null : (
-        <button onClick={showStarterPokes} className="startBtn">
-          Start the game
-        </button>
-      )}
+      <button
+        style={start ? { opacity: 0 } : { opacity: 1, cursor: "pointer" }}
+        onClick={showStarterPokes}
+        className="startBtn"
+      >
+        Start the game
+      </button>
     </div>
   );
 }

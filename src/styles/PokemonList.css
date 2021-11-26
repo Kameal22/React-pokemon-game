@@ -29,3 +29,7 @@
   border-color: yellow;
   border-radius: 10px;
 }
+
+.firstChoiceImgs:hover {
+  cursor: pointer;
+}
