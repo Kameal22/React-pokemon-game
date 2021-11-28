@@ -33,3 +33,29 @@
 .firstChoiceImgs:hover {
   cursor: pointer;
 }
+
+.afterChoiceDiv {
+  border: 2px solid ivory;
+  width: 50%;
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navLinks {
+  margin-top: 1vh;
+  width: 60%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.navLinks a {
+  text-decoration: none;
+  color: ivory;
+}
+
+.navLinks a:hover {
+  border-bottom: 1px solid ivory;
+}

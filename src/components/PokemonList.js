@@ -7,14 +7,13 @@ const API_URL = "https://pokeapi.co/api/v2/pokemon/?limit=100&offset=0";
 
 function PokemonList() {
   const [start, setStart] = useState(false);
-  const [pokemonChoice, setPokemonChoice] = useState(false);
-  const [chosenPokemon, setChosenPokemon] = useState(false); // Somehow pass chosen pokemon to UserView Component and send user there!!!!!!!!
+  const [chosenPokemon, setChosenPokemon] = useState(""); // Somehow pass chosen pokemon to UserView Component and send user there!!!!!!!!
   const [pokemonList, setPokemonList] = useState({});
   const [userChoice, setUserChoice] = useState([]);
 
   useEffect(() => {
     async function fetchPokemons() {
-      const details = [];
+      const fetchedImgs = [];
 
       const response = await axios.get(API_URL);
       const fetchedUrl = response.data.results.map((poke) => poke.url);
@@ -22,11 +21,11 @@ function PokemonList() {
       axios.all(fetchedUrl.map((url) => axios.get(url))).then(
         axios.spread(function (...res) {
           res.forEach((pokemon) => {
-            if (!details.includes(pokemon.data.sprites.front_default)) {
-              details.push(pokemon.data.sprites.front_default);
+            if (!fetchedImgs.includes(pokemon.data.sprites.front_default)) {
+              fetchedImgs.push(pokemon.data.sprites.front_default);
             }
           });
-          setPokemonList(details);
+          setPokemonList(fetchedImgs);
         })
       );
     }
@@ -44,42 +43,48 @@ function PokemonList() {
     setStart(true);
   };
 
-  const chooseStarterPokemon = () => {
-    setPokemonChoice(true);
+  const chooseStarterPokemon = (pokemon) => {
+    setChosenPokemon(pokemon);
+    window.localStorage.setItem("userPokemon", JSON.stringify(chosenPokemon));
   };
 
-  return (
-    <div className="mainDiv">
-      {pokemonChoice ? (
-        <div className="NavLinks">
+  if (window.localStorage.length === 0) {
+    return (
+      <div className="mainDiv">
+        <h1 className="mainHeading">
+          {start ? "Choose Your pokemon" : "Press start"}
+        </h1>
+        <div className="pokeChoiceDiv">
+          {userChoice.map((pokemon) => {
+            return (
+              <img
+                src={pokemon}
+                onClick={() => chooseStarterPokemon(pokemon)}
+                className="firstChoiceImgs"
+              ></img>
+            );
+          })}
+        </div>
+        <button
+          style={start ? { opacity: 0 } : { opacity: 1, cursor: "pointer" }}
+          onClick={showStarterPokes}
+          className="startBtn"
+        >
+          Start the game
+        </button>
+      </div>
+    );
+  } else {
+    return (
+      <div className="afterChoiceDiv">
+        <div className="navLinks">
           <Link to="/Pokedex">Pokedex</Link>
           <Link to="/Equipment">Equipment</Link>
           <Link to="/Character">Character</Link>
         </div>
-      ) : (
-        <h1 className="mainHeading">
-          {start ? "Choose Your pokemon" : "Press start"}
-        </h1>
-      )}
-      <div className="pokeChoiceDiv">
-        {userChoice.map((pokemon) => {
-          return (
-            <img
-              src={pokemon}
-              onClick={chooseStarterPokemon}
-              className="firstChoiceImgs"
-            ></img>
-          );
-        })}
+        <img src={chosenPokemon}></img>
       </div>
-      <button
-        style={start ? { opacity: 0 } : { opacity: 1, cursor: "pointer" }}
-        onClick={showStarterPokes}
-        className="startBtn"
-      >
-        Start the game
-      </button>
-    </div>
-  );
+    );
+  }
 }
 export default PokemonList;
