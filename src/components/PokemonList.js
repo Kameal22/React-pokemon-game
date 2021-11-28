@@ -8,12 +8,12 @@ const API_URL = "https://pokeapi.co/api/v2/pokemon/?limit=100&offset=0";
 function PokemonList() {
   const [start, setStart] = useState(false);
   const [chosenPokemon, setChosenPokemon] = useState(""); // Somehow pass chosen pokemon to UserView Component and send user there!!!!!!!!
-  const [pokemonList, setPokemonList] = useState({});
+  const [pokemonList, setPokemonList] = useState([]);
   const [userChoice, setUserChoice] = useState([]);
 
   useEffect(() => {
     async function fetchPokemons() {
-      const fetchedImgs = [];
+      const fetchedPokemons = [{ names: [] }, { imgs: [] }];
 
       const response = await axios.get(API_URL);
       const fetchedUrl = response.data.results.map((poke) => poke.url);
@@ -21,11 +21,10 @@ function PokemonList() {
       axios.all(fetchedUrl.map((url) => axios.get(url))).then(
         axios.spread(function (...res) {
           res.forEach((pokemon) => {
-            if (!fetchedImgs.includes(pokemon.data.sprites.front_default)) {
-              fetchedImgs.push(pokemon.data.sprites.front_default);
-            }
+            fetchedPokemons[0].names.push(pokemon.data.name);
+            fetchedPokemons[1].imgs.push(pokemon.data.sprites.front_default);
           });
-          setPokemonList(fetchedImgs);
+          setPokemonList(fetchedPokemons);
         })
       );
     }
@@ -33,19 +32,20 @@ function PokemonList() {
   }, []);
 
   const showStarterPokes = () => {
-    const images = [];
+    // const images = [];
 
-    while (images.length < 3) {
-      let randInt = Math.floor(Math.random() * pokemonList.length);
-      images.push(pokemonList[randInt]);
-    }
-    setUserChoice(images);
-    setStart(true);
+    // while (images.length < 3) {
+    //   let randInt = Math.floor(Math.random() * pokemonList.length);
+    //   images.push(pokemonList[randInt]);
+    // }
+    // setUserChoice(images);
+    // setStart(true);
+    console.log(pokemonList);
   };
 
   const chooseStarterPokemon = (pokemon) => {
     setChosenPokemon(pokemon);
-    window.localStorage.setItem("userPokemon", JSON.stringify(chosenPokemon));
+    // window.localStorage.setItem("userPokemon", JSON.stringify(chosenPokemon));
   };
 
   if (window.localStorage.length === 0) {
