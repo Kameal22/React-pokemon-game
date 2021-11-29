@@ -5,16 +5,38 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
 }
 
 .pokedex {
   width: 75%;
   height: 90%;
-  border: 1px solid red;
+  border-bottom: none;
   color: ivory;
 }
 
 .pokedexHeading {
   text-align: center;
+  color: yellow;
+}
+
+.navLinksScd {
+  margin-top: 2vh;
+  width: 50%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.navLinksScd a {
+  text-decoration: none;
+  color: ivory;
+}
+
+.navLinksScd a:hover {
+  color: yellow;
+}
+
+.pokedexPokemons {
+  height: 80%;
+  border-left: 1px solid ivory;
+  border-right: 1px solid ivory;
 }
