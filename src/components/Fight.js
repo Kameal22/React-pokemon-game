@@ -1,7 +1,7 @@
-import "../styles/Character.css";
+import "../styles/Fight.css";
 import { Link } from "react-router-dom";
 
-function Character() {
+function Fight() {
   return (
     <div className="pokedexDiv">
       <div className="navLinks">
@@ -10,8 +10,8 @@ function Character() {
         <Link to="/Character">Character</Link>
         <Link to="/Fight">Fight</Link>
       </div>
-      <h1>Character</h1>
+      <h1>Fight</h1>
     </div>
   );
 }
-export default Character;
+export default Fight;

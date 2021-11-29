@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Pokedex from "./components/Pokedex.js";
 import Equipment from "./components/Equipment.js";
 import Character from "./components/Character.js";
+import Fight from "./components/Fight";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="Pokedex" element={<Pokedex />} />
           <Route path="Equipment" element={<Equipment />} />
           <Route path="Character" element={<Character />} />
+          <Route path="Fight" element={<Fight />} />
           <Route
             path="*"
             element={
