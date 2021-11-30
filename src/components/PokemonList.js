@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import "../styles/PokemonList.css";
 import { Link } from "react-router-dom";
 
-const API_URL = "https://pokeapi.co/api/v2/pokemon/?limit=100&offset=0";
+const API_URL = "https://pokeapi.co/api/v2/pokemon/?limit=200&offset=0";
 
 function PokemonList() {
   const [start, setStart] = useState(false);
@@ -97,7 +97,9 @@ function PokemonList() {
         <div className="nav">
           <h1 className="gameName">pokeGame</h1>
           <div className="navLinks">
-            <Link to="/Pokedex">Pokedex</Link>
+            <Link to="/Pokedex" state={{ pokemons: pokemonList }}>
+              Pokedex
+            </Link>
             <Link to="/Equipment">Equipment</Link>
             <Link to="/Character">Character</Link>
             <Link to="/Fight">Fight</Link>
