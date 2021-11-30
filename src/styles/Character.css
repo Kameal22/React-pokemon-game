@@ -8,10 +8,27 @@
   border-left: 1px solid ivory;
   border-right: 1px solid ivory;
   width: 50%;
-  height: 50%;
+  height: 65%;
   padding-left: 1em;
 }
 
 .aditionalInfo {
   color: grey;
+}
+
+.currPokemonDiv {
+  display: flex;
+  align-items: center;
+  height: 15%;
+}
+
+.changePokemonDiv {
+  display: flex;
+  align-items: center;
+  width: 50%;
+  justify-content: flex-start;
+}
+
+.changePokemonDiv p {
+  margin-right: 2em;
 }

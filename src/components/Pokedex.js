@@ -1,11 +1,8 @@
 import "../styles/Pokedex.css";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { useState } from "react";
 
-function Pokedex() {
-  const [currentPokemon, setCurrentPokemon] = useState({});
-
+function Pokedex(props) {
   const location = useLocation();
   const { pokemons } = location.state; //This is how You pass anything between components in Router, so fucking cool and easy.
 

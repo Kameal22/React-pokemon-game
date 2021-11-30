@@ -1,7 +1,8 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "../styles/PokemonList.css";
 import { Link } from "react-router-dom";
+import { PokemonContext } from "../contexts/CurrentPokemonContext";
 
 const API_URL_POKEMON = "https://pokeapi.co/api/v2/pokemon/?limit=200&offset=0";
 const API_URL_ITEMS = "https://pokeapi.co/api/v2/item/?limit=35&offset=0";
@@ -72,8 +73,15 @@ function PokemonList() {
     setStart(true);
   };
 
+  const { changePokemon } = useContext(PokemonContext); // This is how I'm also gona work with data between components. Super cool
+
+  const changeCurrentPokemon = (pokemon) => {
+    return changePokemon(pokemon);
+  };
+
   const chooseStarterPokemon = (pokemon) => {
     setChosenPokemon(pokemon);
+    changeCurrentPokemon(pokemon.img);
     window.localStorage.setItem(
       "userPokemonName",
       JSON.stringify(pokemon.name)
