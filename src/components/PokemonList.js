@@ -3,19 +3,21 @@ import React, { useState, useEffect } from "react";
 import "../styles/PokemonList.css";
 import { Link } from "react-router-dom";
 
-const API_URL = "https://pokeapi.co/api/v2/pokemon/?limit=200&offset=0";
+const API_URL_POKEMON = "https://pokeapi.co/api/v2/pokemon/?limit=200&offset=0";
+const API_URL_ITEMS = "https://pokeapi.co/api/v2/item/?limit=35&offset=0";
 
 function PokemonList() {
   const [start, setStart] = useState(false);
   const [chosenPokemon, setChosenPokemon] = useState({});
   const [pokemonList, setPokemonList] = useState([]);
+  const [itemsList, setItemsList] = useState([]);
   const [userChoice, setUserChoice] = useState([]);
 
   useEffect(() => {
     async function fetchPokemons() {
       const fetchedPokemons = [];
 
-      const response = await axios.get(API_URL);
+      const response = await axios.get(API_URL_POKEMON);
       const fetchedUrl = response.data.results.map((poke) => poke.url);
 
       axios.all(fetchedUrl.map((url) => axios.get(url))).then(
@@ -31,7 +33,13 @@ function PokemonList() {
         })
       );
     }
+    async function fetchItems() {
+      const fetchedItems = [];
+
+      const response = await axios.get(API_URL_ITEMS);
+    }
     fetchPokemons();
+    fetchItems();
   }, []);
 
   const showStarterPokes = () => {
