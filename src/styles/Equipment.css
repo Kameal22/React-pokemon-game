@@ -10,3 +10,10 @@
 .equipmentHeading {
   color: yellow;
 }
+
+.itemsDiv {
+  width: 75%;
+  height: 90%;
+  border-bottom: none;
+  color: ivory;
+}

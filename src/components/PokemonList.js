@@ -37,6 +37,21 @@ function PokemonList() {
       const fetchedItems = [];
 
       const response = await axios.get(API_URL_ITEMS);
+      const fetchedUrl = response.data.results.map((item) => item.url);
+
+      axios.all(fetchedUrl.map((url) => axios.get(url))).then(
+        axios.spread(function (...res) {
+          res.forEach((item) => {
+            const itemObject = {
+              name: item.data.name,
+              img: item.data.sprites.default,
+              usage: item.data.effect_entries[0].effect,
+            };
+            fetchedItems.push(itemObject);
+          });
+          setItemsList(fetchedItems);
+        })
+      );
     }
     fetchPokemons();
     fetchItems();
@@ -105,10 +120,15 @@ function PokemonList() {
         <div className="nav">
           <h1 className="gameName">pokeGame</h1>
           <div className="navLinks">
-            <Link to="/Pokedex" state={{ pokemons: pokemonList }}>
+            <Link
+              to="/Pokedex"
+              state={{ pokemons: pokemonList, items: itemsList }}
+            >
               Pokedex
             </Link>
-            <Link to="/Equipment">Equipment</Link>
+            <Link to="/Equipment" state={{ items: itemsList }}>
+              Equipment
+            </Link>
             <Link to="/Character">Character</Link>
             <Link to="/Fight">Fight</Link>
           </div>
