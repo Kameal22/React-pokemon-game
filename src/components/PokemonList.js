@@ -88,7 +88,7 @@ function PokemonList() {
   const chooseStarterPokemon = (pokemon) => {
     setChosenPokemon(pokemon);
     changeCurrentPokemon(pokemon);
-    discoverNewPokemon(pokemon.name);
+    discoverNewPokemon(pokemon);
     window.localStorage.setItem(
       "userPokemonName",
       JSON.stringify(pokemon.name)

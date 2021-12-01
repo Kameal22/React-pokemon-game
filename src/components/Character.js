@@ -14,7 +14,10 @@ function Character() {
   const { currentPokemon, changePokemon } = useContext(PokemonContext);
 
   const handleChange = (event) => {
-    changePokemon(event);
+    const foundPokemon = ownedPokemon.find(
+      (pokemon) => pokemon.name === event.target.value
+    );
+    changePokemon(foundPokemon);
   };
 
   return (
@@ -24,7 +27,7 @@ function Character() {
       </div>
       <h2 className="characterHeading">Character</h2>
       <div className="characterDiv">
-        <h3>username here</h3>
+        <h3 onClick={() => console.log(currentPokemon)}>username here</h3>
         <p>Level : {level}</p>
         <p>Exp : {exp}</p>
         <p>Owned Pokemon : {encounters} of 200</p>
@@ -36,12 +39,12 @@ function Character() {
           <img src={currentPokemon.img}></img>
         </div>
         <div className="changePokemonDiv">
-          <p onClick={() => console.log(ownedPokemon)}>Change pokemon </p>
-          <select value={ownedPokemon} onChange={handleChange}>
+          <p>Change pokemon </p>
+          <select name="changePoke" onChange={handleChange}>
             {ownedPokemon.map((pokemon) => {
               return (
-                <option value={pokemon} key={pokemon}>
-                  {pokemon}
+                <option value={pokemon.name} key={pokemon.name}>
+                  {pokemon.name}
                 </option>
               );
             })}
