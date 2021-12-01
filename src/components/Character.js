@@ -1,6 +1,7 @@
 import "../styles/Character.css";
 import { Link } from "react-router-dom";
 import React, { useState, useContext } from "react";
+import { OwnedPokemonContext } from "../contexts/OwnedPokemon";
 import { PokemonContext } from "../contexts/CurrentPokemonContext";
 
 function Character() {
@@ -9,7 +10,12 @@ function Character() {
   const [requiredExp, showRequiredExp] = useState(10);
   const [encounters, addEncounter] = useState(1);
 
-  const { currentPokemon } = useContext(PokemonContext); // This is how I'm also gona work with data between components. Super cool
+  const { ownedPokemon } = useContext(OwnedPokemonContext);
+  const { currentPokemon, changePokemon } = useContext(PokemonContext);
+
+  const handleChange = (event) => {
+    changePokemon(event);
+  };
 
   return (
     <div className="pokedexDiv">
@@ -27,11 +33,19 @@ function Character() {
         </p>
         <div className="currPokemonDiv">
           <p>Current Pokemon :</p>
-          <img src={currentPokemon}></img>
+          <img src={currentPokemon.img}></img>
         </div>
         <div className="changePokemonDiv">
-          <p>Change pokemon </p>
-          <select></select>
+          <p onClick={() => console.log(ownedPokemon)}>Change pokemon </p>
+          <select value={ownedPokemon} onChange={handleChange}>
+            {ownedPokemon.map((pokemon) => {
+              return (
+                <option value={pokemon} key={pokemon}>
+                  {pokemon}
+                </option>
+              );
+            })}
+          </select>
         </div>
       </div>
     </div>

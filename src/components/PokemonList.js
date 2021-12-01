@@ -3,8 +3,9 @@ import React, { useState, useEffect, useContext } from "react";
 import "../styles/PokemonList.css";
 import { Link } from "react-router-dom";
 import { PokemonContext } from "../contexts/CurrentPokemonContext";
+import { OwnedPokemonContext } from "../contexts/OwnedPokemon";
 
-const API_URL_POKEMON = "https://pokeapi.co/api/v2/pokemon/?limit=200&offset=0";
+const API_URL_POKEMON = "https://pokeapi.co/api/v2/pokemon/?limit=100&offset=0";
 const API_URL_ITEMS = "https://pokeapi.co/api/v2/item/?limit=35&offset=0";
 
 function PokemonList() {
@@ -62,7 +63,7 @@ function PokemonList() {
     const starterPokes = [];
 
     while (starterPokes.length < 3) {
-      let randInt = Math.floor(Math.random() * pokemonList.length) + 1;
+      let randInt = Math.floor(Math.random() * pokemonList.length);
       const starterObject = {
         name: pokemonList[randInt].name,
         img: pokemonList[randInt].img,
@@ -73,15 +74,21 @@ function PokemonList() {
     setStart(true);
   };
 
-  const { changePokemon } = useContext(PokemonContext); // This is how I'm also gona work with data between components. Super cool
+  const { changePokemon } = useContext(PokemonContext);
+  const { discoverPokemon } = useContext(OwnedPokemonContext);
 
   const changeCurrentPokemon = (pokemon) => {
     return changePokemon(pokemon);
   };
 
+  const discoverNewPokemon = (pokemon) => {
+    return discoverPokemon(pokemon);
+  };
+
   const chooseStarterPokemon = (pokemon) => {
     setChosenPokemon(pokemon);
-    changeCurrentPokemon(pokemon.img);
+    changeCurrentPokemon(pokemon);
+    discoverNewPokemon(pokemon.name);
     window.localStorage.setItem(
       "userPokemonName",
       JSON.stringify(pokemon.name)
