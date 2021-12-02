@@ -40,6 +40,10 @@
   border-left: 1px solid ivory;
   border-right: 1px solid ivory;
   overflow-y: scroll;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .pokedexPokemons::-webkit-scrollbar {

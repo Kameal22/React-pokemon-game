@@ -12,8 +12,19 @@
 }
 
 .itemsDiv {
-  width: 75%;
-  height: 90%;
+  width: 50%;
+  border-left: 1px solid ivory;
+  border-right: 1px solid ivory;
+  height: 50%;
   border-bottom: none;
   color: ivory;
+  margin-top: 4vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.itemImg {
+  width: 4em;
 }

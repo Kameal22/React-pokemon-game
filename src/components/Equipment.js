@@ -1,20 +1,35 @@
 import "../styles/Equipment.css";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { OwnedItemsContext } from "../contexts/OwnedItemsContext";
 
 function Equipment() {
-  const location = useLocation();
-  const { items } = location.state;
+  const { ownedItem } = useContext(OwnedItemsContext);
+
+  const setStarterItems = () => {
+    const starterItems = [];
+
+    starterItems.push(ownedItem[0][3], ownedItem[0][16], ownedItem[0][17]);
+
+    return starterItems;
+  };
+
+  const starters = setStarterItems();
 
   return (
     <div className="equipmentDiv">
       <div className="navLinksScd">
         <Link to="/">Home</Link>
       </div>
-      <h2 className="equipmentHeading">Your items</h2>
+      <h2
+        onClick={() => console.log(setStarterItems())}
+        className="equipmentHeading"
+      >
+        Your items
+      </h2>
       <div className="itemsDiv">
-        {items.map((item) => {
-          return <img src={item.img} />;
+        {starters.map((item) => {
+          return <img className="itemImg" src={item.img} alt={item.name} />;
         })}
       </div>
     </div>

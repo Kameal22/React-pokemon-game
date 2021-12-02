@@ -4,16 +4,22 @@ import "../styles/PokemonList.css";
 import { Link } from "react-router-dom";
 import { PokemonContext } from "../contexts/CurrentPokemonContext";
 import { OwnedPokemonContext } from "../contexts/OwnedPokemon";
+import { OwnedItemsContext } from "../contexts/OwnedItemsContext";
 
 const API_URL_POKEMON = "https://pokeapi.co/api/v2/pokemon/?limit=100&offset=0";
 const API_URL_ITEMS = "https://pokeapi.co/api/v2/item/?limit=35&offset=0";
 
+//  filter: brightness(0); <- USE THIS TO BLACKOUT IMG'S OF UNKNOWN POKEMON
+
 function PokemonList() {
   const [start, setStart] = useState(false);
-  const [chosenPokemon, setChosenPokemon] = useState({});
   const [pokemonList, setPokemonList] = useState([]);
   const [itemsList, setItemsList] = useState([]);
   const [userChoice, setUserChoice] = useState([]);
+
+  const { currentPokemon, changePokemon } = useContext(PokemonContext);
+  const { discoverPokemon } = useContext(OwnedPokemonContext);
+  const { getItem } = useContext(OwnedItemsContext);
 
   useEffect(() => {
     async function fetchPokemons() {
@@ -35,6 +41,7 @@ function PokemonList() {
         })
       );
     }
+
     async function fetchItems() {
       const fetchedItems = [];
 
@@ -74,9 +81,6 @@ function PokemonList() {
     setStart(true);
   };
 
-  const { changePokemon } = useContext(PokemonContext);
-  const { discoverPokemon } = useContext(OwnedPokemonContext);
-
   const changeCurrentPokemon = (pokemon) => {
     return changePokemon(pokemon);
   };
@@ -85,15 +89,22 @@ function PokemonList() {
     return discoverPokemon(pokemon);
   };
 
+  const addItems = (item) => {
+    return getItem(item);
+  };
+
   const chooseStarterPokemon = (pokemon) => {
-    setChosenPokemon(pokemon);
     changeCurrentPokemon(pokemon);
     discoverNewPokemon(pokemon);
+    addItems(itemsList);
     window.localStorage.setItem(
-      "userPokemonName",
+      "currentPokemonName",
       JSON.stringify(pokemon.name)
     );
-    window.localStorage.setItem("userPokemonImg", JSON.stringify(pokemon.img));
+    window.localStorage.setItem(
+      "currentPokemonImg",
+      JSON.stringify(pokemon.img)
+    );
   };
 
   const startOver = () => {
@@ -149,10 +160,10 @@ function PokemonList() {
           </div>
         </div>
         <div className="chosenPokemonMainView">
-          <p>{window.localStorage.getItem("userPokemonName").slice(1, -1)}</p>
-          <img
-            src={window.localStorage.getItem("userPokemonImg").slice(1, -1)}
-          ></img>
+          <p onClick={() => console.log(currentPokemon)}>
+            {currentPokemon.name}
+          </p>
+          <img src={currentPokemon.img} alt={currentPokemon.name}></img>
         </div>
         <p onClick={startOver} className="startOver">
           Start over
