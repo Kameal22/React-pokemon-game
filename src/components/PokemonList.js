@@ -9,8 +9,6 @@ import { OwnedItemsContext } from "../contexts/OwnedItemsContext";
 const API_URL_POKEMON = "https://pokeapi.co/api/v2/pokemon/?limit=100&offset=0";
 const API_URL_ITEMS = "https://pokeapi.co/api/v2/item/?limit=35&offset=0";
 
-//  filter: brightness(0); <- USE THIS TO BLACKOUT IMG'S OF UNKNOWN POKEMON
-
 function PokemonList() {
   const [start, setStart] = useState(false);
   const [pokemonList, setPokemonList] = useState([]);
@@ -152,17 +150,13 @@ function PokemonList() {
             >
               Pokedex
             </Link>
-            <Link to="/Equipment" state={{ items: itemsList }}>
-              Equipment
-            </Link>
+            <Link to="/Equipment">Equipment</Link>
             <Link to="/Character">Character</Link>
             <Link to="/Fight">Fight</Link>
           </div>
         </div>
         <div className="chosenPokemonMainView">
-          <p onClick={() => console.log(currentPokemon)}>
-            {currentPokemon.name}
-          </p>
+          <p>{currentPokemon.name}</p>
           <img src={currentPokemon.img} alt={currentPokemon.name}></img>
         </div>
         <p onClick={startOver} className="startOver">

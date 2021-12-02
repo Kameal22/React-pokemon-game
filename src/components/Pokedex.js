@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { useContext } from "react";
 import { OwnedPokemonContext } from "../contexts/OwnedPokemon";
 
-function Pokedex(props) {
+function Pokedex() {
   const location = useLocation();
   const { pokemons } = location.state; //This is how You pass anything between components in Router, so fucking cool and easy.
 
@@ -21,7 +21,7 @@ function Pokedex(props) {
           {pokemons.map((pokemon) => {
             return (
               <img
-                style={{ cursor: "pointer" }}
+                style={{ cursor: "pointer", filter: "brightness(0)" }}
                 src={pokemon.img}
                 alt={pokemon.name}
                 onClick={() => discoverPokemon(pokemon)}
