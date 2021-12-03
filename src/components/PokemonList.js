@@ -32,6 +32,7 @@ function PokemonList() {
             const pokemonObject = {
               name: pokemon.data.name,
               img: pokemon.data.sprites.front_default,
+              discovered: false,
             };
             fetchedPokemons.push(pokemonObject);
           });
@@ -94,6 +95,7 @@ function PokemonList() {
   const chooseStarterPokemon = (pokemon) => {
     changeCurrentPokemon(pokemon);
     discoverNewPokemon(pokemon);
+    // Change original pokemonList and set chosen pokemon's discovery state to true.
     addItems(itemsList);
     window.localStorage.setItem(
       "currentPokemonName",
@@ -144,10 +146,7 @@ function PokemonList() {
         <div className="nav">
           <h1 className="gameName">pokeGame</h1>
           <div className="navLinks">
-            <Link
-              to="/Pokedex"
-              state={{ pokemons: pokemonList, items: itemsList }}
-            >
+            <Link to="/Pokedex" state={{ pokemons: pokemonList }}>
               Pokedex
             </Link>
             <Link to="/Equipment">Equipment</Link>

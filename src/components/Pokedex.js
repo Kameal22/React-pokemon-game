@@ -10,6 +10,8 @@ function Pokedex() {
 
   const { discoverPokemon } = useContext(OwnedPokemonContext);
 
+  // Import ownedPokemons and find the same in pokemons from location.state then swap them to make it have discovery property set to true.
+
   return (
     <div className="pokedexDiv">
       <div className="navLinksScd">
@@ -21,7 +23,11 @@ function Pokedex() {
           {pokemons.map((pokemon) => {
             return (
               <img
-                style={{ cursor: "pointer", filter: "brightness(0)" }}
+                style={
+                  pokemon.discovery
+                    ? { filter: "brightness(1)" }
+                    : { filter: "brightness(0)" }
+                }
                 src={pokemon.img}
                 alt={pokemon.name}
                 onClick={() => discoverPokemon(pokemon)}

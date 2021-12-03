@@ -27,7 +27,7 @@ function Character() {
       </div>
       <h2 className="characterHeading">Character</h2>
       <div className="characterDiv">
-        <h3>username here</h3>
+        <h3 onClick={() => console.log(ownedPokemon)}>username here</h3>
         <p>Level : {level}</p>
         <p>Exp : {exp}</p>
         <p>Owned Pokemon : {encounters} of 200</p>

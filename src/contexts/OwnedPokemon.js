@@ -6,6 +6,7 @@ export function OwnPokemon(props) {
   const [ownedPokemon, setOwnedPokemon] = useState([]);
 
   const discoverPokemon = (pokemon) => {
+    pokemon.discovery = true;
     setOwnedPokemon((prevArr) => [...prevArr, pokemon]);
     window.localStorage.setItem("ownedPokemons", JSON.stringify(pokemon));
   };
