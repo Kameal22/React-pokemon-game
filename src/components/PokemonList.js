@@ -2,12 +2,15 @@ import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
 import "../styles/PokemonList.css";
 import { Link } from "react-router-dom";
+import { PokemonListContext } from "../contexts/PokemonListContext";
 import { PokemonContext } from "../contexts/CurrentPokemonContext";
 import { OwnedPokemonContext } from "../contexts/OwnedPokemon";
 import { OwnedItemsContext } from "../contexts/OwnedItemsContext";
 
 const API_URL_POKEMON = "https://pokeapi.co/api/v2/pokemon/?limit=100&offset=0";
 const API_URL_ITEMS = "https://pokeapi.co/api/v2/item/?limit=35&offset=0";
+
+// EXPORT POKEMON LIST TO IT'S OWN CONTEXT. BECAUSE FUCK YOU
 
 function PokemonList() {
   const [start, setStart] = useState(false);
@@ -18,6 +21,11 @@ function PokemonList() {
   const { currentPokemon, changePokemon } = useContext(PokemonContext);
   const { discoverPokemon } = useContext(OwnedPokemonContext);
   const { getItem } = useContext(OwnedItemsContext);
+  const { setInitialList } = useContext(PokemonListContext);
+
+  const sentListToContext = (pokemon) => {
+    return setInitialList(pokemon);
+  };
 
   useEffect(() => {
     async function fetchPokemons() {
@@ -37,6 +45,7 @@ function PokemonList() {
             fetchedPokemons.push(pokemonObject);
           });
           setPokemonList(fetchedPokemons);
+          sentListToContext(fetchedPokemons);
         })
       );
     }
@@ -95,7 +104,12 @@ function PokemonList() {
   const chooseStarterPokemon = (pokemon) => {
     changeCurrentPokemon(pokemon);
     discoverNewPokemon(pokemon);
-    // Change original pokemonList and set chosen pokemon's discovery state to true.
+    const currPoke = pokemonList.findIndex(
+      (poke) => poke.name === pokemon.name
+    );
+
+    pokemonList[currPoke].discovered = true;
+
     addItems(itemsList);
     window.localStorage.setItem(
       "currentPokemonName",
@@ -105,6 +119,7 @@ function PokemonList() {
       "currentPokemonImg",
       JSON.stringify(pokemon.img)
     );
+    window.localStorage.setItem("TEST", JSON.stringify(pokemon.discovered));
   };
 
   const startOver = () => {
@@ -144,11 +159,11 @@ function PokemonList() {
     return (
       <div className="afterChoiceDiv">
         <div className="nav">
-          <h1 className="gameName">pokeGame</h1>
+          <h1 onClick={() => console.log(pokemonList)} className="gameName">
+            pokeGame
+          </h1>
           <div className="navLinks">
-            <Link to="/Pokedex" state={{ pokemons: pokemonList }}>
-              Pokedex
-            </Link>
+            <Link to="/Pokedex">Pokedex</Link>
             <Link to="/Equipment">Equipment</Link>
             <Link to="/Character">Character</Link>
             <Link to="/Fight">Fight</Link>

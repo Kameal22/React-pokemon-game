@@ -3,14 +3,11 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useContext } from "react";
 import { OwnedPokemonContext } from "../contexts/OwnedPokemon";
+import { PokemonListContext } from "../contexts/PokemonListContext";
 
 function Pokedex() {
-  const location = useLocation();
-  const { pokemons } = location.state; //This is how You pass anything between components in Router, so fucking cool and easy.
-
-  const { discoverPokemon } = useContext(OwnedPokemonContext);
-
-  // Import ownedPokemons and find the same in pokemons from location.state then swap them to make it have discovery property set to true.
+  const { pokemonList, discoverPokemon, setDiscoveredPokemon } =
+    useContext(PokemonListContext);
 
   return (
     <div className="pokedexDiv">
@@ -18,19 +15,21 @@ function Pokedex() {
         <Link to="/">Home</Link>
       </div>
       <div className="pokedex">
-        <h2 className="pokedexHeading">Your Pokedex</h2>
+        <h2 onClick={() => console.log(pokemonList)} className="pokedexHeading">
+          Your Pokedex
+        </h2>
         <div className="pokedexPokemons">
-          {pokemons.map((pokemon) => {
+          {pokemonList.map((pokemon) => {
             return (
               <img
                 style={
-                  pokemon.discovery
+                  pokemon.discovered
                     ? { filter: "brightness(1)" }
                     : { filter: "brightness(0)" }
                 }
                 src={pokemon.img}
                 alt={pokemon.name}
-                onClick={() => discoverPokemon(pokemon)}
+                // onClick={() => discoverPokemon(pokemon)}
               ></img>
             );
           })}
