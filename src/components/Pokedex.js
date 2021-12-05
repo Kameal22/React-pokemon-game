@@ -15,9 +15,7 @@ function Pokedex() {
         <Link to="/">Home</Link>
       </div>
       <div className="pokedex">
-        <h2 onClick={() => console.log(pokemonList)} className="pokedexHeading">
-          Your Pokedex
-        </h2>
+        <h2 className="pokedexHeading">Your Pokedex</h2>
         <div className="pokedexPokemons">
           {pokemonList.map((pokemon) => {
             return (

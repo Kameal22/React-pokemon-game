@@ -2,54 +2,25 @@ import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
 import "../styles/PokemonList.css";
 import { Link } from "react-router-dom";
-import { PokemonListContext } from "../contexts/PokemonListContext";
 import { PokemonContext } from "../contexts/CurrentPokemonContext";
 import { OwnedPokemonContext } from "../contexts/OwnedPokemon";
 import { OwnedItemsContext } from "../contexts/OwnedItemsContext";
+import { PokemonListContext } from "../contexts/PokemonListContext";
 
-const API_URL_POKEMON = "https://pokeapi.co/api/v2/pokemon/?limit=100&offset=0";
 const API_URL_ITEMS = "https://pokeapi.co/api/v2/item/?limit=35&offset=0";
-
-// EXPORT POKEMON LIST TO IT'S OWN CONTEXT. BECAUSE FUCK YOU
 
 function PokemonList() {
   const [start, setStart] = useState(false);
-  const [pokemonList, setPokemonList] = useState([]);
   const [itemsList, setItemsList] = useState([]);
   const [userChoice, setUserChoice] = useState([]);
 
   const { currentPokemon, changePokemon } = useContext(PokemonContext);
   const { discoverPokemon } = useContext(OwnedPokemonContext);
   const { getItem } = useContext(OwnedItemsContext);
-  const { setInitialList } = useContext(PokemonListContext);
 
-  const sentListToContext = (pokemon) => {
-    return setInitialList(pokemon);
-  };
+  const { pokemonList } = useContext(PokemonListContext);
 
   useEffect(() => {
-    async function fetchPokemons() {
-      const fetchedPokemons = [];
-
-      const response = await axios.get(API_URL_POKEMON);
-      const fetchedUrl = response.data.results.map((poke) => poke.url);
-
-      axios.all(fetchedUrl.map((url) => axios.get(url))).then(
-        axios.spread(function (...res) {
-          res.forEach((pokemon) => {
-            const pokemonObject = {
-              name: pokemon.data.name,
-              img: pokemon.data.sprites.front_default,
-              discovered: false,
-            };
-            fetchedPokemons.push(pokemonObject);
-          });
-          setPokemonList(fetchedPokemons);
-          sentListToContext(fetchedPokemons);
-        })
-      );
-    }
-
     async function fetchItems() {
       const fetchedItems = [];
 
@@ -70,7 +41,6 @@ function PokemonList() {
         })
       );
     }
-    fetchPokemons();
     fetchItems();
   }, []);
 
@@ -159,9 +129,7 @@ function PokemonList() {
     return (
       <div className="afterChoiceDiv">
         <div className="nav">
-          <h1 onClick={() => console.log(pokemonList)} className="gameName">
-            pokeGame
-          </h1>
+          <h1 className="gameName">pokeGame</h1>
           <div className="navLinks">
             <Link to="/Pokedex">Pokedex</Link>
             <Link to="/Equipment">Equipment</Link>

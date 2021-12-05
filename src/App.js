@@ -9,6 +9,7 @@ import Character from "./components/Character.js";
 import Fight from "./components/Fight";
 import { OwnItem } from "./contexts/OwnedItemsContext";
 import { PokemonListModifier } from "./contexts/PokemonListContext";
+import FetchPokemon from "./utills/FetchPokemon";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <PokemonSelector>
             <OwnPokemon>
               <OwnItem>
+                <FetchPokemon />
                 <Routes>
                   <Route path="/" element={<PokemonList />} />
                   <Route path="Pokedex" element={<Pokedex />} />
