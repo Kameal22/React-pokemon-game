@@ -2,9 +2,12 @@ import "../styles/Equipment.css";
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { OwnedItemsContext } from "../contexts/OwnedItemsContext";
+import { ItemsListContext } from "../contexts/ItemsListContext";
 
 function Equipment() {
   const { ownedItem } = useContext(OwnedItemsContext);
+
+  const { itemsList } = useContext(ItemsListContext);
 
   const setStarterItems = () => {
     const starterItems = [];
@@ -21,7 +24,9 @@ function Equipment() {
       <div className="navLinksScd">
         <Link to="/">Home</Link>
       </div>
-      <h2 className="equipmentHeading">Your items</h2>
+      <h2 onClick={() => console.log(itemsList)} className="equipmentHeading">
+        Your items
+      </h2>
       <div className="itemsDiv">
         {starters.map((item) => {
           return <img className="itemImg" src={item.img} alt={item.name} />;

@@ -6,14 +6,14 @@ export function ItemsListModifier(props) {
   const [itemsList, setItemsList] = useState([]);
   const [discoverItem, setDiscoveredItem] = useState([]);
 
-  const setInitialItemsList = (itemsList) => {
+  const setInitialList = (itemsList) => {
     setItemsList(itemsList);
   };
 
   return (
     <ItemsListContext.Provider
       value={{
-        setInitialItemsList,
+        setInitialList,
         itemsList,
         discoverItem,
         setDiscoveredItem,

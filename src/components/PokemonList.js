@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
 import "../styles/PokemonList.css";
 import { Link } from "react-router-dom";
@@ -6,12 +5,10 @@ import { PokemonContext } from "../contexts/CurrentPokemonContext";
 import { OwnedPokemonContext } from "../contexts/OwnedPokemon";
 import { OwnedItemsContext } from "../contexts/OwnedItemsContext";
 import { PokemonListContext } from "../contexts/PokemonListContext";
-
-const API_URL_ITEMS = "https://pokeapi.co/api/v2/item/?limit=35&offset=0";
+import { ItemsListContext } from "../contexts/ItemsListContext";
 
 function PokemonList() {
   const [start, setStart] = useState(false);
-  const [itemsList, setItemsList] = useState([]);
   const [userChoice, setUserChoice] = useState([]);
 
   const { currentPokemon, changePokemon } = useContext(PokemonContext);
@@ -19,30 +16,7 @@ function PokemonList() {
   const { getItem } = useContext(OwnedItemsContext);
 
   const { pokemonList } = useContext(PokemonListContext);
-
-  useEffect(() => {
-    async function fetchItems() {
-      const fetchedItems = [];
-
-      const response = await axios.get(API_URL_ITEMS);
-      const fetchedUrl = response.data.results.map((item) => item.url);
-
-      axios.all(fetchedUrl.map((url) => axios.get(url))).then(
-        axios.spread(function (...res) {
-          res.forEach((item) => {
-            const itemObject = {
-              name: item.data.name,
-              img: item.data.sprites.default,
-              usage: item.data.effect_entries[0].effect,
-            };
-            fetchedItems.push(itemObject);
-          });
-          setItemsList(fetchedItems);
-        })
-      );
-    }
-    fetchItems();
-  }, []);
+  const { itemsList } = useContext(ItemsListContext);
 
   const showStarterPokes = () => {
     const starterPokes = [];

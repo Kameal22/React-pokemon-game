@@ -4,11 +4,11 @@ import { ItemsListContext } from "../contexts/ItemsListContext";
 
 const API_URL_ITEMS = "https://pokeapi.co/api/v2/item/?limit=35&offset=0";
 
-function FetchItems() {
-  const { setInitialItemsList } = useContext(ItemsListContext);
+function FetchItem() {
+  const { setInitialList } = useContext(ItemsListContext);
 
   const sentListToContext = (item) => {
-    return setInitialItemsList(item);
+    return setInitialList(item);
   };
 
   useEffect(() => {
@@ -37,4 +37,4 @@ function FetchItems() {
 
   return <div></div>;
 }
-export default FetchItems;
+export default FetchItem;
