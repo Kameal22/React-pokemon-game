@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import "../styles/PokemonList.css";
 import { Link } from "react-router-dom";
-import { PokemonContext } from "../contexts/CurrentPokemonContext";
-import { OwnedPokemonContext } from "../contexts/OwnedPokemon";
-import { OwnedItemsContext } from "../contexts/OwnedItemsContext";
-import { PokemonListContext } from "../contexts/PokemonListContext";
-import { ItemsListContext } from "../contexts/ItemsListContext";
+import { PokemonContext } from "../contexts/pokemonContexts/CurrentPokemonContext";
+import { OwnedPokemonContext } from "../contexts/pokemonContexts/OwnedPokemon";
+import { OwnedItemsContext } from "../contexts/itemContexts/OwnedItemsContext";
+import { PokemonListContext } from "../contexts/pokemonContexts/PokemonListContext";
+import { ItemsListContext } from "../contexts/itemContexts/ItemsListContext";
 
 function PokemonList() {
   const [start, setStart] = useState(false);

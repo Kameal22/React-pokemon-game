@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useContext } from "react";
-import { PokemonListContext } from "../contexts/PokemonListContext";
+import { PokemonListContext } from "../contexts/pokemonContexts/PokemonListContext";
 
 const API_URL_POKEMON = "https://pokeapi.co/api/v2/pokemon/?limit=100&offset=0";
 

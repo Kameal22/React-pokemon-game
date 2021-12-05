@@ -1,8 +1,8 @@
 import "../styles/Equipment.css";
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { OwnedItemsContext } from "../contexts/OwnedItemsContext";
-import { ItemsListContext } from "../contexts/ItemsListContext";
+import { OwnedItemsContext } from "../contexts/itemContexts/OwnedItemsContext";
+import { ItemsListContext } from "../contexts/itemContexts/ItemsListContext";
 
 function Equipment() {
   const { ownedItem } = useContext(OwnedItemsContext);

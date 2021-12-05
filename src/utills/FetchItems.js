@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useContext } from "react";
-import { ItemsListContext } from "../contexts/ItemsListContext";
+import { ItemsListContext } from "../contexts/itemContexts/ItemsListContext";
 
 const API_URL_ITEMS = "https://pokeapi.co/api/v2/item/?limit=35&offset=0";
 

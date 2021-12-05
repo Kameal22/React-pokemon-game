@@ -1,8 +1,8 @@
 import "../styles/Character.css";
 import { Link } from "react-router-dom";
 import React, { useState, useContext } from "react";
-import { OwnedPokemonContext } from "../contexts/OwnedPokemon";
-import { PokemonContext } from "../contexts/CurrentPokemonContext";
+import { OwnedPokemonContext } from "../contexts/pokemonContexts/OwnedPokemon";
+import { PokemonContext } from "../contexts/pokemonContexts/CurrentPokemonContext";
 
 function Character() {
   const [level] = useState(1);

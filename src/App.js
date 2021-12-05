@@ -1,17 +1,17 @@
 import "./styles/App.css";
 import PokemonList from "./components/PokemonList.js";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { PokemonSelector } from "./contexts/CurrentPokemonContext";
-import { OwnPokemon } from "./contexts/OwnedPokemon";
+import { PokemonSelector } from "./contexts/pokemonContexts/CurrentPokemonContext";
+import { OwnPokemon } from "./contexts/pokemonContexts/OwnedPokemon";
 import Pokedex from "./components/Pokedex.js";
 import Equipment from "./components/Equipment.js";
 import Character from "./components/Character.js";
 import Fight from "./components/Fight";
-import { OwnItem } from "./contexts/OwnedItemsContext";
-import { PokemonListModifier } from "./contexts/PokemonListContext";
+import { OwnItem } from "./contexts/itemContexts/OwnedItemsContext";
+import { PokemonListModifier } from "./contexts/pokemonContexts/PokemonListContext";
 import FetchPokemon from "./utills/FetchPokemon";
 import FetchItems from "./utills/FetchItems";
-import { ItemsListModifier } from "./contexts/ItemsListContext";
+import { ItemsListModifier } from "./contexts/itemContexts/ItemsListContext";
 
 function App() {
   return (
