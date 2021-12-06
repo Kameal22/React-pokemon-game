@@ -1,6 +1,5 @@
 PREPARATION
 
-1. In Fight component import whole pokemonList.
 2. Make select with choice of terrain for user (initially, later maybe it will be a simple map) - caves, water, forrest(bugs) etc.
 3. Sort pokemon from pokemonList based on their appearance terrain. For example 4/5 diffrent arrays.
 4. Make another select with choice for pokemon to figth with. Let it change current pokemon at the same time. Keep it simple.

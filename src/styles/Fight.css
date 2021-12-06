@@ -1,3 +1,40 @@
 .fightHeading {
   color: yellow;
 }
+
+.fightDiv {
+  border: 2px solid ivory;
+  width: 50%;
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fightSelectingDiv {
+  border: 2px solid red;
+  width: 50%;
+  height: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  color: ivory;
+}
+
+.startedFightDiv {
+  width: 50%;
+  height: 50%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.user {
+  display: flex;
+  flex-direction: column;
+}
+
+.enemy {
+  display: flex;
+  flex-direction: column;
+}
