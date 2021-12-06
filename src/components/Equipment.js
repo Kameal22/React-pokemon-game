@@ -6,7 +6,6 @@ import { ItemsListContext } from "../contexts/itemContexts/ItemsListContext";
 
 function Equipment() {
   const { ownedItem } = useContext(OwnedItemsContext);
-
   const { itemsList } = useContext(ItemsListContext);
 
   const setStarterItems = () => {

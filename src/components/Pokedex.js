@@ -1,8 +1,6 @@
 import "../styles/Pokedex.css";
 import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 import { useContext } from "react";
-import { OwnedPokemonContext } from "../contexts/pokemonContexts/OwnedPokemon";
 import { PokemonListContext } from "../contexts/pokemonContexts/PokemonListContext";
 
 function Pokedex() {

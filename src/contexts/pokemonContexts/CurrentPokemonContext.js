@@ -1,6 +1,6 @@
 import React, { createContext, useState } from "react";
 
-export const PokemonContext = createContext();
+export const CurrentPokemonContext = createContext();
 
 export function PokemonSelector(props) {
   const [currentPokemon, setCurrentPokemon] = useState({});
@@ -9,8 +9,8 @@ export function PokemonSelector(props) {
   };
 
   return (
-    <PokemonContext.Provider value={{ currentPokemon, changePokemon }}>
+    <CurrentPokemonContext.Provider value={{ currentPokemon, changePokemon }}>
       {props.children}
-    </PokemonContext.Provider>
+    </CurrentPokemonContext.Provider>
   );
 }

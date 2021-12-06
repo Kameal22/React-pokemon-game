@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import "../styles/PokemonList.css";
 import { Link } from "react-router-dom";
-import { PokemonContext } from "../contexts/pokemonContexts/CurrentPokemonContext";
-import { OwnedPokemonContext } from "../contexts/pokemonContexts/OwnedPokemon";
+import { CurrentPokemonContext } from "../contexts/pokemonContexts/CurrentPokemonContext";
+import { OwnedPokemonContext } from "../contexts/pokemonContexts/OwnedPokemonContext";
 import { OwnedItemsContext } from "../contexts/itemContexts/OwnedItemsContext";
 import { PokemonListContext } from "../contexts/pokemonContexts/PokemonListContext";
 import { ItemsListContext } from "../contexts/itemContexts/ItemsListContext";
@@ -11,10 +11,9 @@ function PokemonList() {
   const [start, setStart] = useState(false);
   const [userChoice, setUserChoice] = useState([]);
 
-  const { currentPokemon, changePokemon } = useContext(PokemonContext);
+  const { currentPokemon, changePokemon } = useContext(CurrentPokemonContext);
   const { discoverPokemon } = useContext(OwnedPokemonContext);
   const { getItem } = useContext(OwnedItemsContext);
-
   const { pokemonList } = useContext(PokemonListContext);
   const { itemsList } = useContext(ItemsListContext);
 

@@ -1,17 +1,14 @@
 import "../styles/Character.css";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import React, { useState, useContext } from "react";
-import { OwnedPokemonContext } from "../contexts/pokemonContexts/OwnedPokemon";
-import { PokemonContext } from "../contexts/pokemonContexts/CurrentPokemonContext";
+import { OwnedPokemonContext } from "../contexts/pokemonContexts/OwnedPokemonContext";
+import { CurrentPokemonContext } from "../contexts/pokemonContexts/CurrentPokemonContext";
+import { CharacterContext } from "../contexts/playerContexts/CharacterContexts";
 
 function Character() {
-  const [level] = useState(1);
-  const [exp] = useState(0);
-  const [requiredExp] = useState(10);
-  const [encounters] = useState(1);
-
   const { ownedPokemon } = useContext(OwnedPokemonContext);
-  const { currentPokemon, changePokemon } = useContext(PokemonContext);
+  const { currentPokemon, changePokemon } = useContext(CurrentPokemonContext);
+  const { level, exp, requiredExp, encounters } = useContext(CharacterContext);
 
   const handleChange = (event) => {
     const foundPokemon = ownedPokemon.find(
