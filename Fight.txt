@@ -1,0 +1,15 @@
+PREPARATION
+
+1. In Fight component import whole pokemonList.
+2. Make select with choice of terrain for user (initially, later maybe it will be a simple map) - caves, water, forrest(bugs) etc.
+3. Sort pokemon from pokemonList based on their appearance terrain. For example 4/5 diffrent arrays.
+4. Make another select with choice for pokemon to figth with. Let it change current pokemon at the same time. Keep it simple.
+5. Make Fight button which based on chosen terrain will randomly choose a pokemon to fight against.
+6. Display both your, and enemy pokemon on oposite sties, with HP, Terrain icon, Att, Defense.
+7. Display skills list (maybe under the pokemon)
+
+FIGHT 
+
+1. Make a state called TURN, and initialy set it to enemy's. Enemy pokemon will always start the fight. after his turn, change state to user's turn and so on.
+2. If it's enemy's turn - make user's skills disabled to use. And same for enemy.
+3. 
