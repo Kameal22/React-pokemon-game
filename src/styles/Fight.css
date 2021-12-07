@@ -12,7 +12,7 @@
 }
 
 .fightSelectingDiv {
-  border: 2px solid red;
+  border: 2px solid ivory;
   width: 50%;
   height: 30%;
   display: flex;
@@ -24,7 +24,7 @@
 
 .startedFightDiv {
   width: 50%;
-  height: 50%;
+  height: 30%;
   display: flex;
   justify-content: space-evenly;
 }
@@ -34,7 +34,20 @@
   flex-direction: column;
 }
 
+.user p {
+  color: ivory;
+}
+
 .enemy {
   display: flex;
   flex-direction: column;
+}
+
+.enemy p {
+  color: ivory;
+}
+
+.fleeBtn {
+  width: 10%;
+  padding: 5px 5px;
 }
