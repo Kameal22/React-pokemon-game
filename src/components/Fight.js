@@ -2,15 +2,15 @@ import "../styles/Fight.css";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import { CharacterContext } from "../contexts/playerContexts/CharacterContexts";
+// import { CharacterContext } from "../contexts/playerContexts/CharacterContexts";
 import { PokemonListContext } from "../contexts/pokemonContexts/PokemonListContext";
 import { CurrentPokemonContext } from "../contexts/pokemonContexts/CurrentPokemonContext";
 
 const POKE_API = "https://pokeapi.co/api/v2/pokemon/";
 
 function Fight() {
-  const { level, levelUpFunc, exp, expUpFunc, requiredExp, encounters } =
-    useContext(CharacterContext);
+  // const { level, levelUpFunc, exp, expUpFunc, requiredExp, encounters } =
+  //   useContext(CharacterContext);
   const { pokemonList } = useContext(PokemonListContext);
   const { currentPokemon, changePokemon } = useContext(CurrentPokemonContext);
 
@@ -107,14 +107,14 @@ function Fight() {
         <div className="startedFightDiv">
           <div className="user">
             <p>{currentPokemon.name}</p>
-            <img src={currentPokemon.img}></img>
+            <img src={currentPokemon.img} alt={currentPokemon.name}></img>
             <p>Hp: {currentPokemon.health}</p>
             <p>Att: {currentPokemon.attack}</p>
             <p>Def: {currentPokemon.defense}</p>
           </div>
           <div className="enemy">
             <p>{enemy.name}</p>
-            <img src={enemy.img}></img>
+            <img src={enemy.img} alt={enemy.name}></img>
             <p>Hp: {enemy.health}</p>
             <p>Att: {enemy.attack}</p>
             <p>Def: {enemy.defense}</p>

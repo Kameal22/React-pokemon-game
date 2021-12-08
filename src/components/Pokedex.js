@@ -4,8 +4,7 @@ import { useContext } from "react";
 import { PokemonListContext } from "../contexts/pokemonContexts/PokemonListContext";
 
 function Pokedex() {
-  const { pokemonList, discoverPokemon, setDiscoveredPokemon } =
-    useContext(PokemonListContext);
+  const { pokemonList } = useContext(PokemonListContext);
 
   return (
     <div className="pokedexDiv">
