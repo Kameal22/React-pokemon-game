@@ -1,10 +1,12 @@
 import "../styles/Fight.css";
+import axios from "axios";
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { CharacterContext } from "../contexts/playerContexts/CharacterContexts";
 import { PokemonListContext } from "../contexts/pokemonContexts/PokemonListContext";
-import { OwnedPokemonContext } from "../contexts/pokemonContexts/OwnedPokemonContext";
 import { CurrentPokemonContext } from "../contexts/pokemonContexts/CurrentPokemonContext";
+
+const POKE_API = "https://pokeapi.co/api/v2/pokemon/";
 
 function Fight() {
   const { level, levelUpFunc, exp, expUpFunc, requiredExp, encounters } =
@@ -12,28 +14,70 @@ function Fight() {
   const { pokemonList } = useContext(PokemonListContext);
   const { currentPokemon, changePokemon } = useContext(CurrentPokemonContext);
 
-  const [enemy, setEnemy] = useState([]);
+  const [enemy, setEnemy] = useState({});
   const [fightStart, setFightStart] = useState(false);
-  const [playersTurn, setPlayersTurn] = useState(false);
+  const [enemyTurn, setEnemyTurn] = useState(false);
 
-  const levelUp = (level) => {
-    return levelUpFunc(level);
-  };
+  // const levelUp = (level) => {
+  //   return levelUpFunc(level);
+  // };
 
-  const expUp = (exp) => {
-    return expUpFunc(exp);
-  };
-
-  const showEnemy = () => {
-    const randInt = Math.floor(Math.random() * pokemonList.length);
-
-    const enemy = pokemonList[randInt];
-    setEnemy(enemy);
-  };
+  // const expUp = (exp) => {
+  //   return expUpFunc(exp);
+  // };
 
   const start = () => {
     setFightStart(!fightStart);
     showEnemy();
+    setEnemyTurn(!enemyTurn);
+  };
+
+  const getEnemyStats = async () => {
+    let enemyHealth = "";
+    let enemyAttack = "";
+    let enemyDefense = "";
+
+    const res = await axios.get(`${POKE_API}${enemy.name}`);
+    enemyHealth = res.data.stats[0].base_stat;
+    enemyAttack = res.data.stats[1].base_stat;
+    enemyDefense = res.data.stats[2].base_stat;
+
+    setEnemy((prevState) => ({
+      ...prevState,
+      health: enemyHealth,
+      attack: enemyAttack,
+      defense: enemyDefense,
+    }));
+  };
+
+  const getUserStats = async () => {
+    let userHealth = "";
+    let userAttack = "";
+    let userDefense = "";
+
+    const res = await axios.get(`${POKE_API}${currentPokemon.name}`);
+    userHealth = res.data.stats[0].base_stat;
+    userAttack = res.data.stats[1].base_stat;
+    userDefense = res.data.stats[2].base_stat;
+
+    changePokemon((prevState) => ({
+      ...prevState,
+      health: userHealth,
+      attack: userAttack,
+      defense: userDefense,
+    }));
+  };
+
+  const showEnemy = () => {
+    const randInt = Math.floor(Math.random() * pokemonList.length);
+    const enemy = pokemonList[randInt];
+    setEnemy((prevState) => ({
+      ...prevState,
+      name: enemy.name,
+      img: enemy.img,
+    }));
+    getEnemyStats();
+    getUserStats();
   };
 
   const flee = () => {
@@ -57,15 +101,23 @@ function Fight() {
   } else {
     return (
       <div className="fightDiv">
-        <h2 className="fightHeading">Fight</h2>
+        <h2 onClick={() => console.log(enemy)} className="fightHeading">
+          Fight
+        </h2>
         <div className="startedFightDiv">
           <div className="user">
             <p>{currentPokemon.name}</p>
             <img src={currentPokemon.img}></img>
+            <p>Hp: {currentPokemon.health}</p>
+            <p>Att: {currentPokemon.attack}</p>
+            <p>Def: {currentPokemon.defense}</p>
           </div>
           <div className="enemy">
             <p>{enemy.name}</p>
             <img src={enemy.img}></img>
+            <p>Hp: {enemy.health}</p>
+            <p>Att: {enemy.attack}</p>
+            <p>Def: {enemy.defense}</p>
           </div>
         </div>
         <button className="fleeBtn" onClick={flee}>
