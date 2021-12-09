@@ -24,7 +24,12 @@ function PokemonList() {
       let randInt = Math.floor(Math.random() * pokemonList.length);
       const starterObject = {
         name: pokemonList[randInt].name,
+        type: pokemonList[randInt].type,
         img: pokemonList[randInt].img,
+        health: pokemonList[randInt].health,
+        defense: pokemonList[randInt].defense,
+        attack: pokemonList[randInt].attack,
+        ability: pokemonList[randInt].ability,
       };
       starterPokes.push(starterObject);
     }

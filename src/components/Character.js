@@ -4,11 +4,13 @@ import { Link } from "react-router-dom";
 import { OwnedPokemonContext } from "../contexts/pokemonContexts/OwnedPokemonContext";
 import { CurrentPokemonContext } from "../contexts/pokemonContexts/CurrentPokemonContext";
 import { CharacterContext } from "../contexts/playerContexts/CharacterContexts";
+import { PokemonListContext } from "../contexts/pokemonContexts/PokemonListContext";
 
 function Character() {
   const { ownedPokemon } = useContext(OwnedPokemonContext);
   const { currentPokemon, changePokemon } = useContext(CurrentPokemonContext);
   const { level, exp, requiredExp, encounters } = useContext(CharacterContext);
+  const { PokemonList } = useContext(PokemonListContext);
 
   const handleChange = (event) => {
     const foundPokemon = ownedPokemon.find(
@@ -24,7 +26,7 @@ function Character() {
       </div>
       <h2 className="characterHeading">Character</h2>
       <div className="characterDiv">
-        <h3 onClick={() => console.log(ownedPokemon)}>username here</h3>
+        <h3>username here</h3>
         <p>Level : {level}</p>
         <p>Exp : {exp}</p>
         <p>Owned Pokemon : {encounters} of 200</p>

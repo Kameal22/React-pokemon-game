@@ -23,7 +23,12 @@ function FetchPokemon() {
           res.forEach((pokemon) => {
             const pokemonObject = {
               name: pokemon.data.name,
+              type: pokemon.data.types[0].type.name,
               img: pokemon.data.sprites.front_default,
+              health: pokemon.data.stats[0].base_stat,
+              attack: pokemon.data.stats[1].base_stat,
+              defense: pokemon.data.stats[2].base_stat,
+              ability: pokemon.data.abilities[0].ability.name,
               discovered: false,
             };
             fetchedPokemons.push(pokemonObject);
