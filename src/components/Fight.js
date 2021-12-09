@@ -36,17 +36,20 @@ function Fight() {
     let enemyHealth = "";
     let enemyAttack = "";
     let enemyDefense = "";
+    let enemyFirstAbility = "";
 
     const res = await axios.get(`${POKE_API}${enemy.name}`);
     enemyHealth = res.data.stats[0].base_stat;
     enemyAttack = res.data.stats[1].base_stat;
     enemyDefense = res.data.stats[2].base_stat;
+    enemyFirstAbility = res.data.abilities[0].ability.name;
 
     setEnemy((prevState) => ({
       ...prevState,
       health: enemyHealth,
       attack: enemyAttack,
       defense: enemyDefense,
+      ability: enemyFirstAbility,
     }));
   };
 
@@ -54,17 +57,20 @@ function Fight() {
     let userHealth = "";
     let userAttack = "";
     let userDefense = "";
+    let userFirstAbility = "";
 
     const res = await axios.get(`${POKE_API}${currentPokemon.name}`);
     userHealth = res.data.stats[0].base_stat;
     userAttack = res.data.stats[1].base_stat;
     userDefense = res.data.stats[2].base_stat;
+    userFirstAbility = res.data.abilities[0].ability.name;
 
     changePokemon((prevState) => ({
       ...prevState,
       health: userHealth,
       attack: userAttack,
       defense: userDefense,
+      ability: userFirstAbility,
     }));
   };
 
@@ -101,23 +107,23 @@ function Fight() {
   } else {
     return (
       <div className="fightDiv">
-        <h2 onClick={() => console.log(enemy)} className="fightHeading">
-          Fight
-        </h2>
+        <h2 className="fightHeading">Fight</h2>
         <div className="startedFightDiv">
           <div className="user">
-            <p>{currentPokemon.name}</p>
+            <p className="pokeName">{currentPokemon.name}</p>
             <img src={currentPokemon.img} alt={currentPokemon.name}></img>
             <p>Hp: {currentPokemon.health}</p>
             <p>Att: {currentPokemon.attack}</p>
             <p>Def: {currentPokemon.defense}</p>
+            <p>Ability: {currentPokemon.ability}</p>
           </div>
           <div className="enemy">
-            <p>{enemy.name}</p>
+            <p className="pokeName">{enemy.name}</p>
             <img src={enemy.img} alt={enemy.name}></img>
             <p>Hp: {enemy.health}</p>
             <p>Att: {enemy.attack}</p>
             <p>Def: {enemy.defense}</p>
+            <p>Ability: {enemy.ability}</p>
           </div>
         </div>
         <button className="fleeBtn" onClick={flee}>
