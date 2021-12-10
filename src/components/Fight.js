@@ -44,11 +44,12 @@ function Fight() {
     setFightStart(!fightStart);
     showEnemy();
     setEnemyTurn(!enemyTurn);
-    checkElement(currentPokemon.type, enemy.type, setAdvantage);
+    checkElement(currentPokemon.type, enemy.type, setAdvantage, adv);
   };
 
   const flee = () => {
     setFightStart(!fightStart);
+    setAdvantage(false);
   };
 
   if (!fightStart) {
@@ -68,9 +69,7 @@ function Fight() {
   } else {
     return (
       <div className="fightDiv">
-        <h2 onClick={() => console.log(advantage)} className="fightHeading">
-          Fight
-        </h2>
+        <h2 className="fightHeading">Fight</h2>
         <div className="startedFightDiv">
           <div className="user">
             <p className="pokeName">{currentPokemon.name}</p>
