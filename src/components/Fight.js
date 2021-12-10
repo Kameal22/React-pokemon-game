@@ -1,5 +1,5 @@
 import "../styles/Fight.css";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 // import { CharacterContext } from "../contexts/playerContexts/CharacterContexts";
 import { PokemonListContext } from "../contexts/pokemonContexts/PokemonListContext";
@@ -25,15 +25,17 @@ function Fight() {
   //   return expUpFunc(exp);
   // };
 
-  const showEnemy = () => {
-    const randInt = Math.floor(Math.random() * pokemonList.length);
-    const enemy = pokemonList[randInt];
-    setEnemy(enemy);
-  };
+  useEffect(() => {
+    async function getEnemy() {
+      const randInt = Math.floor(Math.random() * pokemonList.length);
+      const enemy = pokemonList[randInt];
+      setEnemy(enemy);
+    }
+    getEnemy();
+  }, [enemy]);
 
   const start = () => {
     setFightStart(!fightStart);
-    showEnemy();
     setEnemyTurn(!enemyTurn);
     checkElement(currentPokemon.type, enemy.type, setAdvantage, advantage);
   };
@@ -41,6 +43,8 @@ function Fight() {
   const flee = () => {
     setFightStart(!fightStart);
     setAdvantage(false);
+    setEnemy("");
+    setEnemyTurn(!enemyTurn);
   };
 
   if (!fightStart) {
@@ -49,7 +53,9 @@ function Fight() {
         <div className="navLinksScd">
           <Link to="/">Home</Link>
         </div>
-        <h2 className="fightHeading">Fight</h2>
+        <h2 onClick={() => console.log(pokemonList)} className="fightHeading">
+          Fight
+        </h2>
         <div className="fightSelectingDiv">
           <h4 onClick={start} style={{ cursor: "pointer" }}>
             Encounter
@@ -76,10 +82,14 @@ function Fight() {
           <div className="enemy">
             <p className="pokeName">{enemy.name}</p>
             <img src={enemy.img} alt={enemy.name}></img>
-            <p>Type: {enemy.type}</p>
+            <p style={advantage ? { color: "red" } : { color: "ivory" }}>
+              Type: {enemy.type}
+            </p>
             <p>Hp: {enemy.health}</p>
             <p>Att: {enemy.attack}</p>
-            <p>Def: {enemy.defense}</p>
+            <p style={advantage ? { color: "red" } : { color: "ivory" }}>
+              Def: {advantage ? enemy.defense / 2 : enemy.defense}
+            </p>
             <p>Ability: {enemy.ability}</p>
           </div>
         </div>

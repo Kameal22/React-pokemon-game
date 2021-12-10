@@ -1,8 +1,9 @@
 export const checkElement = (userElement, enemyElement, setAdv, adv) => {
-  console.log(userElement);
-  console.log(enemyElement);
-  if (userElement === "water" && enemyElement === "fire") {
-    console.log("INCONDITIONAL");
+  if (
+    (userElement === "water" && enemyElement === "fire") ||
+    enemyElement === "rock" ||
+    enemyElement === "ground"
+  ) {
     setAdv(!adv);
   }
 };
