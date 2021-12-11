@@ -53,9 +53,7 @@ function Fight() {
         <div className="navLinksScd">
           <Link to="/">Home</Link>
         </div>
-        <h2 onClick={() => console.log(pokemonList)} className="fightHeading">
-          Fight
-        </h2>
+        <h2 className="fightHeading">Fight</h2>
         <div className="fightSelectingDiv">
           <h4 onClick={start} style={{ cursor: "pointer" }}>
             Encounter
@@ -66,7 +64,9 @@ function Fight() {
   } else {
     return (
       <div className="fightDiv">
-        <h2 className="fightHeading">Fight</h2>
+        <h2 onClick={() => console.log(enemy)} className="fightHeading">
+          Fight
+        </h2>
         <div className="startedFightDiv">
           <div className="user">
             <p className="pokeName">{currentPokemon.name}</p>
@@ -86,14 +86,16 @@ function Fight() {
               Type: {enemy.type}
             </p>
             <p>Hp: {enemy.health}</p>
-            <p>Att: {enemy.attack}</p>
+            <p style={advantage ? { color: "red" } : { color: "ivory" }}>
+              Att: {advantage ? enemy.attack / 2 : enemy.attack}
+            </p>
             <p style={advantage ? { color: "red" } : { color: "ivory" }}>
               Def: {advantage ? enemy.defense / 2 : enemy.defense}
             </p>
             <p>Ability: {enemy.ability}</p>
           </div>
         </div>
-        <button className="fleeBtn" onClick={flee}>
+        <button disabled={!enemyTurn} className="fleeBtn" onClick={flee}>
           Flee
         </button>
       </div>

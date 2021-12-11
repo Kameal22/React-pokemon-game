@@ -9,8 +9,8 @@ import { PokemonListContext } from "../contexts/pokemonContexts/PokemonListConte
 function Character() {
   const { ownedPokemon } = useContext(OwnedPokemonContext);
   const { currentPokemon, changePokemon } = useContext(CurrentPokemonContext);
-  const { level, exp, requiredExp, encounters } = useContext(CharacterContext);
-  const { PokemonList } = useContext(PokemonListContext);
+  const { level, exp, requiredExp } = useContext(CharacterContext);
+  const { pokemonList } = useContext(PokemonListContext);
 
   const handleChange = (event) => {
     const foundPokemon = ownedPokemon.find(
@@ -29,7 +29,9 @@ function Character() {
         <h3>username here</h3>
         <p>Level : {level}</p>
         <p>Exp : {exp}</p>
-        <p>Owned Pokemon : {encounters} of 200</p>
+        <p>
+          Owned Pokemon : {ownedPokemon.length} of {pokemonList.length}
+        </p>
         <p className="aditionalInfo">
           {requiredExp} exp points to reach level 2
         </p>

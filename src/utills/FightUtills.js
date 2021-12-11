@@ -1,4 +1,4 @@
-export const checkElement = (userElement, enemyElement, setAdv, adv) => {
+const checkElement = (userElement, enemyElement, setAdv, adv) => {
   if (
     (userElement === "water" && enemyElement === "fire") ||
     enemyElement === "rock" ||
@@ -8,6 +8,7 @@ export const checkElement = (userElement, enemyElement, setAdv, adv) => {
   }
 };
 
-// DZIAŁA ALE PO KOLEJNYM KLIKNIĘCIU > JEBANY LAG
+const enemyNormalAttack = (enemyAtt, userDef, userHp) => {};
 
+export { checkElement };
 //grass, fire, water, bug, normal, poison, electric, ground, fairy, psychic, fighting, rock, ghost,

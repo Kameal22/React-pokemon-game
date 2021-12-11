@@ -1,6 +1,4 @@
 
 FIGHT 
-
-1. Make a state called TURN, and initialy set it to enemy's. Enemy pokemon will always start the fight. after his turn, change state to user's turn and so on.
-2. If it's enemy's turn - make user's skills disabled to use. And same for enemy.
-3. If pokemon is weak against enemys element - lower it's defense by 25% and attack by 30%
+1.NORMAL ATTACK - Lower attack by 75% of enemy's defense and strike.
+2.ABILITY - Once per fight : Lower attack by 50% of enemy's defense and strike.
