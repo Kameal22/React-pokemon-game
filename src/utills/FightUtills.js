@@ -8,7 +8,7 @@ const checkElement = (userElement, enemyElement, setAdv, adv) => {
   }
 };
 
-const enemyNormalAttack = (enemyAtt, userDef, userHp) => {};
+const enemyNormalAttack = (enemyTurn, enemyAtt, userDef, userHp) => {};
 
 export { checkElement };
 //grass, fire, water, bug, normal, poison, electric, ground, fairy, psychic, fighting, rock, ghost,

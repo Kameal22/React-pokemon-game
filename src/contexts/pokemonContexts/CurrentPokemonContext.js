@@ -9,8 +9,14 @@ export function PokemonSelector(props) {
     setCurrentPokemon(pokemon);
   };
 
+  const changeStats = (pokemon, name) => {
+    pokemon.name = name;
+  };
+
   return (
-    <CurrentPokemonContext.Provider value={{ currentPokemon, changePokemon }}>
+    <CurrentPokemonContext.Provider
+      value={{ currentPokemon, changePokemon, changeStats }}
+    >
       {props.children}
     </CurrentPokemonContext.Provider>
   );
