@@ -47,8 +47,19 @@
   color: ivory;
 }
 
+.fightBtnsDiv {
+  width: 50%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.startFightBtn {
+  width: 30%;
+  padding: 5px 5px;
+}
+
 .fleeBtn {
-  width: 10%;
+  width: 20%;
   padding: 5px 5px;
 }
 

@@ -9,8 +9,12 @@ export function PokemonSelector(props) {
     setCurrentPokemon(pokemon);
   };
 
-  const changeStats = (pokemon, name) => {
-    pokemon.name = name;
+  const changeStats = (pokemon, health) => {
+    let changedHp = (pokemon.health = health);
+    setCurrentPokemon((prevStats) => ({
+      ...prevStats,
+      health: changedHp,
+    }));
   };
 
   return (
