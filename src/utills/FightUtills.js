@@ -20,5 +20,17 @@ const enemyAtt = (enemyAtt, userDef, userHp) => {
   return hpAfterAttack;
 };
 
-export { checkElement, enemyAtt };
+const userAtt = (userAtt, enemyDef, enemyHp) => {
+  let hpAfterAttack = 0;
+  let loweredDefense = enemyDef * 0.85;
+  if (userAtt < loweredDefense) {
+    hpAfterAttack = enemyHp - 10;
+  } else {
+    let actualAttack = userAtt - loweredDefense;
+    hpAfterAttack = enemyHp - actualAttack;
+  }
+  return hpAfterAttack;
+};
+
+export { checkElement, enemyAtt, userAtt };
 //grass, fire, water, bug, normal, poison, electric, ground, fairy, psychic, fighting, rock, ghost,
