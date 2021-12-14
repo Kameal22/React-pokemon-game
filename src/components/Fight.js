@@ -32,20 +32,7 @@ function Fight() {
 
   useEffect(() => {
     checkElement(currentPokemon.type, enemy.type, setAdvantage, advantage);
-    // CHECK IF SOMEONE DIED HERE. ASSIGN IT TO A VARIABLE.
-    if (currentPokemon.health <= 0) {
-      setFightEnd(true);
-      setTimeout(() => {
-        flee();
-        setWinner(enemy.name);
-      }, 1500);
-    } else if (enemy.health <= 0) {
-      setFightEnd(true);
-      setTimeout(() => {
-        flee();
-        setWinner(currentPokemon.name);
-      }, 1500);
-    }
+    checkFightEnd();
   }, [enemy, currentPokemon]);
 
   const absorbEnemyAttack = (pokemon, health) => {
@@ -128,11 +115,26 @@ function Fight() {
     enemyAttack().then(startUsersTurn).then(endUsersTurn).then(nextRound);
   };
 
+  const checkFightEnd = () => {
+    if (currentPokemon.health <= 0) {
+      setFightEnd(true);
+      setTimeout(() => {
+        flee();
+        setWinner(enemy.name);
+      }, 1500);
+    } else if (enemy.health <= 0) {
+      setFightEnd(true);
+      setTimeout(() => {
+        flee();
+        setWinner(currentPokemon.name);
+      }, 1500);
+    }
+  };
+
   const flee = () => {
     setFightStart(false);
     setEncounterStart(false);
     setAdvantage(false);
-    setEnemy("");
     setUserTurn(false);
     setRoundTwo(false);
   };
