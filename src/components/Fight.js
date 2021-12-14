@@ -32,7 +32,21 @@ function Fight() {
 
   useEffect(() => {
     checkElement(currentPokemon.type, enemy.type, setAdvantage, advantage);
-  }, [enemy]);
+    // CHECK IF SOMEONE DIED HERE. ASSIGN IT TO A VARIABLE.
+    if (currentPokemon.health <= 0) {
+      setFightEnd(true);
+      setTimeout(() => {
+        flee();
+        setWinner(enemy.name);
+      }, 1500);
+    } else if (enemy.health <= 0) {
+      setFightEnd(true);
+      setTimeout(() => {
+        flee();
+        setWinner(currentPokemon.name);
+      }, 1500);
+    }
+  }, [enemy, currentPokemon]);
 
   const absorbEnemyAttack = (pokemon, health) => {
     return changeStats(pokemon, health);
@@ -57,55 +71,48 @@ function Fight() {
   };
 
   const enemyAttack = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        setEnemyTurn(true);
-        absorbEnemyAttack(currentPokemon, userHpAfterAtt);
-        resolve();
-      }, 1000);
-    });
+    if (!fightEnd) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          setEnemyTurn(true);
+          absorbEnemyAttack(currentPokemon, userHpAfterAtt.toFixed(2));
+          resolve();
+        }, 1500);
+      });
+    }
   };
 
   const startUsersTurn = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        setEnemyTurn(false);
-        resolve();
-      }, 1000);
-    });
+    if (!fightEnd) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          setEnemyTurn(false);
+          resolve();
+        }, 1000);
+      });
+    }
   };
 
   const endUsersTurn = () => {
-    if (currentPokemon.health > 0) {
+    if (!fightEnd) {
       return new Promise((resolve) => {
         setTimeout(() => {
           setUserTurn(true);
           setEnemy((prevStats) => ({
             ...prevStats,
-            health: enemyHpAfterAtt,
+            health: enemyHpAfterAtt.toFixed(1),
           }));
           resolve();
-        }, 1000);
+        }, 1500);
       });
-    } else {
-      setTimeout(() => {
-        endLostFight(); // in the future change it to a function that handles loss.
-      }, 1000);
     }
   };
 
-  const checkForWin = () => {
+  const nextRound = () => {
     return new Promise((resolve) => {
       setTimeout(() => {
         setUserTurn(false);
-        if (currentPokemon.health <= 0) {
-          console.log("lost");
-        } else if (enemy.health <= 0) {
-          console.log("won");
-        } else {
-          setRoundTwo(true);
-          console.log("next round");
-        }
+        setRoundTwo(true);
         resolve();
       }, 1000);
     });
@@ -118,27 +125,7 @@ function Fight() {
 
   const startTheFight = () => {
     setEncounterStart(true);
-    enemyAttack().then(startUsersTurn).then(endUsersTurn).then(checkForWin);
-  };
-
-  const endLostFight = () => {
-    setFightStart(false);
-    setEncounterStart(false);
-    setAdvantage(false);
-    setUserTurn(false);
-    setEnemyTurn(false);
-    setWinner(enemy.name);
-    setFightEnd(true);
-  };
-
-  const endWonFight = () => {
-    setFightStart(false);
-    setEncounterStart(false);
-    setAdvantage(false);
-    setUserTurn(false);
-    setEnemyTurn(false);
-    setWinner(currentPokemon.name);
-    setFightEnd(true);
+    enemyAttack().then(startUsersTurn).then(endUsersTurn).then(nextRound);
   };
 
   const flee = () => {
