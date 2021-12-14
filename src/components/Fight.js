@@ -19,7 +19,7 @@ function Fight() {
   const [userTurn, setUserTurn] = useState(false);
   const [advantage, setAdvantage] = useState(false);
   const [roundTwo, setRoundTwo] = useState(false);
-  const [endFight, setFightEnd] = useState(false);
+  const [fightEnd, setFightEnd] = useState(false);
   const [winner, setWinner] = useState("");
 
   // const levelUp = (level) => {
@@ -60,8 +60,9 @@ function Fight() {
     return new Promise((resolve) => {
       setTimeout(() => {
         setEnemyTurn(true);
+        absorbEnemyAttack(currentPokemon, userHpAfterAtt);
         resolve();
-      }, 1500);
+      }, 1000);
     });
   };
 
@@ -69,7 +70,6 @@ function Fight() {
     return new Promise((resolve) => {
       setTimeout(() => {
         setEnemyTurn(false);
-        absorbEnemyAttack(currentPokemon, userHpAfterAtt);
         resolve();
       }, 1000);
     });
@@ -85,13 +85,12 @@ function Fight() {
             health: enemyHpAfterAtt,
           }));
           resolve();
-        }, 1500);
+        }, 1000);
       });
     } else {
-      setFightEnd(true);
       setTimeout(() => {
         endLostFight(); // in the future change it to a function that handles loss.
-      }, 1500);
+      }, 1000);
     }
   };
 
@@ -99,10 +98,13 @@ function Fight() {
     return new Promise((resolve) => {
       setTimeout(() => {
         setUserTurn(false);
-        if (currentPokemon.health <= 0 || enemy.health <= 0) {
-          setFightEnd(true);
+        if (currentPokemon.health <= 0) {
+          console.log("lost");
+        } else if (enemy.health <= 0) {
+          console.log("won");
         } else {
           setRoundTwo(true);
+          console.log("next round");
         }
         resolve();
       }, 1000);
@@ -115,8 +117,8 @@ function Fight() {
   };
 
   const startTheFight = () => {
-    enemyAttack().then(startUsersTurn).then(endUsersTurn).then(checkForWin);
     setEncounterStart(true);
+    enemyAttack().then(startUsersTurn).then(endUsersTurn).then(checkForWin);
   };
 
   const endLostFight = () => {
@@ -126,6 +128,16 @@ function Fight() {
     setUserTurn(false);
     setEnemyTurn(false);
     setWinner(enemy.name);
+    setFightEnd(true);
+  };
+
+  const endWonFight = () => {
+    setFightStart(false);
+    setEncounterStart(false);
+    setAdvantage(false);
+    setUserTurn(false);
+    setEnemyTurn(false);
+    setWinner(currentPokemon.name);
     setFightEnd(true);
   };
 
@@ -139,19 +151,32 @@ function Fight() {
   };
 
   if (!fightStart) {
-    return (
-      <div className="fightDiv">
-        <div className="navLinksScd">
-          <Link to="/">Home</Link>
+    if (!fightEnd) {
+      return (
+        <div className="fightDiv">
+          <div className="navLinksScd">
+            <Link to="/">Home</Link>
+          </div>
+          <h2 className="fightHeading">Fight</h2>
+          <div className="fightSelectingDiv">
+            <h4 onClick={startEncounter} style={{ cursor: "pointer" }}>
+              Encounter
+            </h4>
+          </div>
         </div>
-        <h2 className="fightHeading">Fight</h2>
-        <div className="fightSelectingDiv">
-          <h4 onClick={startEncounter} style={{ cursor: "pointer" }}>
-            Encounter
-          </h4>
+      );
+    } else {
+      return (
+        <div className="fightDiv">
+          <div className="navLinksScd">
+            <Link to="/">Home</Link>
+          </div>
+          <div className="fightSelectingDiv">
+            <h2>winner is {winner}</h2>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
   } else {
     return (
       <div className="fightDiv">
