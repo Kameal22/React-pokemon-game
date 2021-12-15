@@ -14,11 +14,11 @@ function Fight() {
 
   const [enemy, setEnemy] = useState({});
   const [fightStart, setFightStart] = useState(false);
-  const [encounterStart, setEncounterStart] = useState(false);
+  const [encounterStart, setEncounterStart] = useState(false); // when this is true, show user a choice of attack/use pokeball/use potion
   const [enemyTurn, setEnemyTurn] = useState(false);
   const [userTurn, setUserTurn] = useState(false);
   const [advantage, setAdvantage] = useState(false);
-  const [roundTwo, setRoundTwo] = useState(false);
+  const [roundCount, setRoundCount] = useState(1);
   const [fightEnd, setFightEnd] = useState(false);
   const [winner, setWinner] = useState("");
 
@@ -29,6 +29,8 @@ function Fight() {
   // const expUp = (exp) => {
   //   return expUpFunc(exp);
   // };
+
+  // MAKE POPUP MESSAGE WITH -> WILD pokemon APPEARS
 
   useEffect(() => {
     checkElement(currentPokemon.type, enemy.type, setAdvantage, advantage);
@@ -99,7 +101,7 @@ function Fight() {
     return new Promise((resolve) => {
       setTimeout(() => {
         setUserTurn(false);
-        setRoundTwo(true);
+        setRoundCount(roundCount + 1);
         resolve();
       }, 1000);
     });
@@ -136,7 +138,6 @@ function Fight() {
     setEncounterStart(false);
     setAdvantage(false);
     setUserTurn(false);
-    setRoundTwo(false);
   };
 
   if (!fightStart) {
@@ -211,26 +212,12 @@ function Fight() {
           </div>
         </div>
         <div className="fightBtnsDiv">
+          <button className="startFightBtn" onClick={startTheFight}>
+            Fight
+          </button>
           <button disabled={enemyTurn} className="fleeBtn" onClick={flee}>
             Flee
           </button>
-          {roundTwo ? (
-            <button
-              style={roundTwo ? { opacity: 1 } : { opacity: 0 }}
-              className="startFightBtn"
-              onClick={startTheFight}
-            >
-              Round Two
-            </button>
-          ) : (
-            <button
-              style={encounterStart ? { opacity: 0 } : { opacity: 1 }}
-              className="startFightBtn"
-              onClick={startTheFight}
-            >
-              Start the fight
-            </button>
-          )}
         </div>
       </div>
     );

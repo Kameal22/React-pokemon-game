@@ -48,7 +48,7 @@
 }
 
 .fightBtnsDiv {
-  width: 50%;
+  width: 30%;
   display: flex;
   justify-content: space-around;
 }
