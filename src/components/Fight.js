@@ -21,7 +21,9 @@ function Fight() {
   const [roundCount, setRoundCount] = useState(1);
   const [fightEnd, setFightEnd] = useState(false);
   const [winner, setWinner] = useState("");
+  const [userAttack, setUserAttack] = useState(false);
 
+  const [userAction, setUserAction] = useState("");
   // const levelUp = (level) => {
   //   return levelUpFunc(level);
   // };
@@ -76,13 +78,14 @@ function Fight() {
       return new Promise((resolve) => {
         setTimeout(() => {
           setEnemyTurn(false);
+          setUserAttack(true);
           resolve();
         }, 1000);
       });
     }
   };
 
-  const endUsersTurn = () => {
+  const userBasicAttackTurn = () => {
     if (!fightEnd) {
       return new Promise((resolve) => {
         setTimeout(() => {
@@ -97,10 +100,26 @@ function Fight() {
     }
   };
 
+  const userAbilityAttackTurn = () => {
+    if (!fightEnd) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          setUserTurn(true);
+          setEnemy((prevStats) => ({
+            ...prevStats,
+            health: 1000000,
+          }));
+          resolve();
+        }, 1500);
+      });
+    }
+  };
+
   const nextRound = () => {
     return new Promise((resolve) => {
       setTimeout(() => {
         setUserTurn(false);
+        setUserAttack(false);
         setRoundCount(roundCount + 1);
         resolve();
       }, 1000);
@@ -114,7 +133,13 @@ function Fight() {
 
   const startTheFight = () => {
     setEncounterStart(true);
-    enemyAttack().then(startUsersTurn).then(endUsersTurn).then(nextRound);
+    if (userAction === "") {
+      enemyAttack().then(startUsersTurn);
+    } else if (userAction === "basicAttack") {
+      userBasicAttackTurn().then(nextRound);
+    } else if (userAction === "abilityAttack") {
+      userAbilityAttackTurn().then(nextRound);
+    }
   };
 
   const checkFightEnd = () => {
@@ -131,6 +156,22 @@ function Fight() {
         setWinner(currentPokemon.name);
       }, 1500);
     }
+  };
+
+  const basicAttackFunc = () => {
+    setUserAction("basicAttack");
+    userBasicAttackTurn()
+      .then(nextRound)
+      .then(enemyAttack)
+      .then(startUsersTurn);
+  };
+
+  const abilityAttackFunc = () => {
+    setUserAction("abilityAttack");
+    userAbilityAttackTurn()
+      .then(nextRound)
+      .then(enemyAttack)
+      .then(startUsersTurn);
   };
 
   const flee = () => {
@@ -173,21 +214,38 @@ function Fight() {
         <h2 className="fightHeading">Fight</h2>
         <div className="startedFightDiv">
           <div className="user">
-            <p className="pokeName">{currentPokemon.name}</p>
-            <img
-              style={userTurn ? { transform: "translate(300px, 0)" } : null}
-              src={currentPokemon.img}
-              alt={currentPokemon.name}
-            ></img>
-            <p style={advantage ? { color: "green" } : { color: "ivory" }}>
-              Type: {currentPokemon.type}
-            </p>
-            <p style={enemyTurn ? { color: "red" } : { color: "ivory" }}>
-              Hp: {currentPokemon.health}
-            </p>
-            <p>Att: {currentPokemon.attack}</p>
-            <p>Def: {currentPokemon.defense}</p>
-            <p>Ability: {currentPokemon.ability}</p>
+            {userAttack ? (
+              <div>
+                <p className="pokeName">{currentPokemon.name}</p>
+                <img
+                  style={userTurn ? { transform: "translate(300px, 0)" } : null}
+                  src={currentPokemon.img}
+                  alt={currentPokemon.name}
+                ></img>
+                <p onClick={basicAttackFunc}>Basic attack</p>
+                <p onClick={abilityAttackFunc}>{currentPokemon.ability}</p>
+                <p>Use pokeball</p>
+                <p>Use potion</p>
+              </div>
+            ) : (
+              <div>
+                <p className="pokeName">{currentPokemon.name}</p>
+                <img
+                  style={userTurn ? { transform: "translate(300px, 0)" } : null}
+                  src={currentPokemon.img}
+                  alt={currentPokemon.name}
+                ></img>
+                <p style={advantage ? { color: "green" } : { color: "ivory" }}>
+                  Type: {currentPokemon.type}
+                </p>
+                <p style={enemyTurn ? { color: "red" } : { color: "ivory" }}>
+                  Hp: {currentPokemon.health}
+                </p>
+                <p>Att: {currentPokemon.attack}</p>
+                <p>Def: {currentPokemon.defense}</p>
+                <p>Ability: {currentPokemon.ability}</p>
+              </div>
+            )}
           </div>
           <div className="enemy">
             <p className="pokeName">{enemy.name}</p>
@@ -196,19 +254,21 @@ function Fight() {
               src={enemy.img}
               alt={enemy.name}
             ></img>
-            <p style={advantage ? { color: "red" } : { color: "ivory" }}>
-              Type: {enemy.type}
-            </p>
-            <p style={userTurn ? { color: "red" } : { color: "ivory" }}>
-              Hp: {enemy.health}
-            </p>
-            <p style={advantage ? { color: "red" } : { color: "ivory" }}>
-              Att: {advantage ? enemy.attack / 2 : enemy.attack}
-            </p>
-            <p style={advantage ? { color: "red" } : { color: "ivory" }}>
-              Def: {advantage ? enemy.defense / 2 : enemy.defense}
-            </p>
-            <p>Ability: {enemy.ability}</p>
+            <div>
+              <p style={advantage ? { color: "red" } : { color: "ivory" }}>
+                Type: {enemy.type}
+              </p>
+              <p style={userTurn ? { color: "red" } : { color: "ivory" }}>
+                Hp: {enemy.health}
+              </p>
+              <p style={advantage ? { color: "red" } : { color: "ivory" }}>
+                Att: {advantage ? enemy.attack / 2 : enemy.attack}
+              </p>
+              <p style={advantage ? { color: "red" } : { color: "ivory" }}>
+                Def: {advantage ? enemy.defense / 2 : enemy.defense}
+              </p>
+              <p>Ability: {enemy.ability}</p>
+            </div>
           </div>
         </div>
         <div className="fightBtnsDiv">
