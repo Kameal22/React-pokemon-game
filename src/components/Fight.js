@@ -4,7 +4,12 @@ import { Link } from "react-router-dom";
 // import { CharacterContext } from "../contexts/playerContexts/CharacterContexts";
 import { PokemonListContext } from "../contexts/pokemonContexts/PokemonListContext";
 import { CurrentPokemonContext } from "../contexts/pokemonContexts/CurrentPokemonContext";
-import { checkElement, enemyAtt, userAtt } from "../utills/FightUtills";
+import {
+  checkElement,
+  enemyAtt,
+  userAtt,
+  usePotion,
+} from "../utills/FightUtills";
 import { OwnedItemsContext } from "../contexts/itemContexts/OwnedItemsContext";
 import { OwnedPokemonContext } from "../contexts/pokemonContexts/OwnedPokemonContext";
 
@@ -21,13 +26,13 @@ function Fight() {
   const [enemyTurn, setEnemyTurn] = useState(false);
   const [userTurn, setUserTurn] = useState(false);
   const [advantage, setAdvantage] = useState(false);
-  const [roundCount, setRoundCount] = useState(1);
   const [fightEnd, setFightEnd] = useState(false);
   const [winner, setWinner] = useState("");
   const [userAttack, setUserAttack] = useState(false);
   const [userAction, setUserAction] = useState("");
   const [pokeballThrow, setPokeballThrow] = useState(false);
   const [enemyCaught, setEnemyCaught] = useState(false);
+  const [potionUsed, setPotionUse] = useState(false);
 
   // const levelUp = (level) => {
   //   return levelUpFunc(level);
@@ -50,6 +55,10 @@ function Fight() {
     return changeStats(pokemon, health);
   };
 
+  const potionHeal = (pokemon, health) => {
+    return changeStats(pokemon, health);
+  };
+
   const userHpAfterAtt = enemyAtt(
     enemy.attack,
     currentPokemon.defense,
@@ -62,6 +71,8 @@ function Fight() {
     enemy.health
   );
 
+  const userHpAfterHealing = usePotion(currentPokemon.health, 25);
+
   const showEnemy = () => {
     const randInt = Math.floor(Math.random() * pokemonList.length);
     const enemy = pokemonList[randInt];
@@ -73,9 +84,9 @@ function Fight() {
       return new Promise((resolve) => {
         setTimeout(() => {
           setEnemyTurn(true);
-          absorbEnemyAttack(currentPokemon, userHpAfterAtt.toFixed(2));
+          absorbEnemyAttack(currentPokemon, Math.round(userHpAfterAtt));
           resolve();
-        }, 1500);
+        }, 1000);
       });
     }
   };
@@ -99,10 +110,10 @@ function Fight() {
           setUserTurn(true);
           setEnemy((prevStats) => ({
             ...prevStats,
-            health: enemyHpAfterAtt.toFixed(1),
+            health: Math.round(enemyHpAfterAtt),
           }));
           resolve();
-        }, 1500);
+        }, 1000);
       });
     }
   };
@@ -128,38 +139,46 @@ function Fight() {
         setTimeout(() => {
           setPokeballThrow(true);
           resolve();
-        }, 1500);
+        }, 1000);
       });
     }
   };
 
   const userCatchPokemonTurn = () => {
-    if (!fightEnd) {
-      return new Promise((resolve) => {
-        if (Math.random() < 0.4) {
-          setTimeout(() => {
-            discoverNewPokemon(enemy);
-            setEnemyCaught(true);
-          }, 1500);
-        } else {
-          setTimeout(() => {
-            setPokeballThrow(false);
-            resolve();
-          }, 2000);
-        }
-      });
-    }
+    return new Promise((resolve) => {
+      if (Math.random() < 0.4) {
+        setTimeout(() => {
+          discoverNewPokemon(enemy);
+          setEnemyCaught(true);
+        }, 1000);
+      } else {
+        setTimeout(() => {
+          setPokeballThrow(false);
+          resolve();
+        }, 1500);
+      }
+    });
   };
 
   const userPotionUseTurn = () => {
     if (!fightEnd) {
       return new Promise((resolve) => {
         setTimeout(() => {
-          console.log("Used Potion");
+          setPotionUse(true);
           resolve();
-        }, 1500);
+        }, 1000);
       });
     }
+  };
+
+  const healUserTurn = () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        potionHeal(currentPokemon, userHpAfterHealing);
+        setPotionUse(false);
+        resolve();
+      }, 1000);
+    });
   };
 
   const nextRound = () => {
@@ -167,7 +186,6 @@ function Fight() {
       setTimeout(() => {
         setUserTurn(false);
         setUserAttack(false);
-        setRoundCount(roundCount + 1);
         resolve();
       }, 1000);
     });
@@ -187,6 +205,8 @@ function Fight() {
       userAbilityAttackTurn().then(nextRound);
     } else if (userAction === "pokeballUse") {
       userPokeballUseTurn().then(userCatchPokemonTurn).then(nextRound);
+    } else if (userAction === "potionUse") {
+      userPotionUseTurn().then(healUserTurn).then(nextRound);
     }
   };
 
@@ -196,13 +216,13 @@ function Fight() {
       setTimeout(() => {
         flee();
         setWinner(enemy.name);
-      }, 1500);
+      }, 1000);
     } else if (enemy.health <= 0) {
       setFightEnd(true);
       setTimeout(() => {
         flee();
         setWinner(currentPokemon.name);
-      }, 1500);
+      }, 1000);
     }
   };
 
@@ -233,17 +253,20 @@ function Fight() {
 
   const potionUseFunc = () => {
     setUserAction("potionUse");
-    userPotionUseTurn().then(nextRound).then(enemyAttack).then(startUsersTurn);
+    userPotionUseTurn()
+      .then(healUserTurn)
+      .then(nextRound)
+      .then(enemyAttack)
+      .then(startUsersTurn);
   };
 
   const flee = () => {
     setFightStart(false);
     setAdvantage(false);
-    setUserTurn(false);
     setEnemyCaught(false);
     setWinner("");
     setUserAction("");
-    setEnemy({});
+    setUserAttack(false);
   };
 
   if (!fightStart) {
@@ -273,7 +296,16 @@ function Fight() {
         </div>
       );
     }
-  } else {
+  } else if (enemyCaught) {
+    return (
+      <div className="fightDiv">
+        <h1>You caught {enemy.name}</h1>
+        <button className="fleeBtn" onClick={flee}>
+          Go back
+        </button>
+      </div>
+    );
+  } else if (!enemyCaught) {
     return (
       <div className="fightDiv">
         <h2 className="fightHeading">Fight</h2>
@@ -289,19 +321,23 @@ function Fight() {
                 ></img>
                 <img
                   style={
-                    pokeballThrow ? { transform: "translate(300px, 0)" } : null
+                    potionUsed ? { transform: "translate(0, -20px" } : null
                   }
-                  src={ownedItem[0][3].img}
+                  src={ownedItem[0][16].img}
                 ></img>
                 <img
                   style={
                     pokeballThrow ? { transform: "translate(300px, 0)" } : null
                   }
-                  src={ownedItem[0][16].img}
+                  src={ownedItem[0][3].img}
                 ></img>
-                <p className="userMove" onClick={basicAttackFunc}>
-                  Basic attack
-                </p>
+                {potionUsed ? (
+                  <p style={{ color: "green", fontWeight: "bold" }}>+ 25 hp!</p>
+                ) : (
+                  <p className="userMove" onClick={basicAttackFunc}>
+                    Basic attack
+                  </p>
+                )}
                 <p className="userMove" onClick={abilityAttackFunc}>
                   {currentPokemon.ability}
                 </p>
@@ -361,20 +397,14 @@ function Fight() {
             </div>
           </div>
         </div>
-        {enemyCaught ? (
-          <button className="fleeBtn" onClick={flee}>
-            Go back
+        <div className="fightBtnsDiv">
+          <button className="startFightBtn" onClick={startTheFight}>
+            Fight
           </button>
-        ) : (
-          <div className="fightBtnsDiv">
-            <button className="startFightBtn" onClick={startTheFight}>
-              Fight
-            </button>
-            <button disabled={enemyTurn} className="fleeBtn" onClick={flee}>
-              Flee
-            </button>
-          </div>
-        )}
+          <button disabled={enemyTurn} className="fleeBtn" onClick={flee}>
+            Flee
+          </button>
+        </div>
       </div>
     );
   }

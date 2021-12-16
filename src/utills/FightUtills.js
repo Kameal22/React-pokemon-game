@@ -32,5 +32,10 @@ const userAtt = (userAtt, enemyDef, enemyHp) => {
   return hpAfterAttack;
 };
 
-export { checkElement, enemyAtt, userAtt };
+const usePotion = (userHp, potionHeal) => {
+  let hpAfterHealing = userHp + potionHeal;
+  return hpAfterHealing;
+};
+
+export { checkElement, enemyAtt, userAtt, usePotion };
 //grass, fire, water, bug, normal, poison, electric, ground, fairy, psychic, fighting, rock, ghost,

@@ -74,3 +74,8 @@
 .userMove:hover {
   color: red;
 }
+
+.userMoveChoices {
+  display: flex;
+  flex-direction: column;
+}
