@@ -23,9 +23,7 @@ function Equipment() {
       <div className="navLinksScd">
         <Link to="/">Home</Link>
       </div>
-      <h2 onClick={() => console.log(itemsList)} className="equipmentHeading">
-        Your items
-      </h2>
+      <h2 className="equipmentHeading">Your items</h2>
       <div className="itemsDiv">
         {starters.map((item) => {
           return <img className="itemImg" src={item.img} alt={item.name} />;

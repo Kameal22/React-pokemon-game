@@ -5,16 +5,19 @@ import { Link } from "react-router-dom";
 import { PokemonListContext } from "../contexts/pokemonContexts/PokemonListContext";
 import { CurrentPokemonContext } from "../contexts/pokemonContexts/CurrentPokemonContext";
 import { checkElement, enemyAtt, userAtt } from "../utills/FightUtills";
+import { OwnedItemsContext } from "../contexts/itemContexts/OwnedItemsContext";
+import { OwnedPokemonContext } from "../contexts/pokemonContexts/OwnedPokemonContext";
 
 function Fight() {
   // const { level, levelUpFunc, exp, expUpFunc, requiredExp, encounters } =
   //   useContext(CharacterContext);
   const { pokemonList } = useContext(PokemonListContext);
   const { currentPokemon, changeStats } = useContext(CurrentPokemonContext);
+  const { ownedItem } = useContext(OwnedItemsContext);
+  const { discoverPokemon } = useContext(OwnedPokemonContext);
 
   const [enemy, setEnemy] = useState({});
   const [fightStart, setFightStart] = useState(false);
-  const [encounterStart, setEncounterStart] = useState(false); // when this is true, show user a choice of attack/use pokeball/use potion
   const [enemyTurn, setEnemyTurn] = useState(false);
   const [userTurn, setUserTurn] = useState(false);
   const [advantage, setAdvantage] = useState(false);
@@ -22,8 +25,10 @@ function Fight() {
   const [fightEnd, setFightEnd] = useState(false);
   const [winner, setWinner] = useState("");
   const [userAttack, setUserAttack] = useState(false);
-
   const [userAction, setUserAction] = useState("");
+  const [pokeballThrow, setPokeballThrow] = useState(false);
+  const [enemyCaught, setEnemyCaught] = useState(false);
+
   // const levelUp = (level) => {
   //   return levelUpFunc(level);
   // };
@@ -32,12 +37,14 @@ function Fight() {
   //   return expUpFunc(exp);
   // };
 
-  // MAKE POPUP MESSAGE WITH -> WILD pokemon APPEARS
-
   useEffect(() => {
     checkElement(currentPokemon.type, enemy.type, setAdvantage, advantage);
     checkFightEnd();
   }, [enemy, currentPokemon]);
+
+  const discoverNewPokemon = (pokemon) => {
+    return discoverPokemon(pokemon);
+  };
 
   const absorbEnemyAttack = (pokemon, health) => {
     return changeStats(pokemon, health);
@@ -115,6 +122,46 @@ function Fight() {
     }
   };
 
+  const userPokeballUseTurn = () => {
+    if (!fightEnd) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          setPokeballThrow(true);
+          resolve();
+        }, 1500);
+      });
+    }
+  };
+
+  const userCatchPokemonTurn = () => {
+    if (!fightEnd) {
+      return new Promise((resolve) => {
+        if (Math.random() < 0.4) {
+          setTimeout(() => {
+            discoverNewPokemon(enemy);
+            setEnemyCaught(true);
+          }, 1500);
+        } else {
+          setTimeout(() => {
+            setPokeballThrow(false);
+            resolve();
+          }, 2000);
+        }
+      });
+    }
+  };
+
+  const userPotionUseTurn = () => {
+    if (!fightEnd) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          console.log("Used Potion");
+          resolve();
+        }, 1500);
+      });
+    }
+  };
+
   const nextRound = () => {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -132,13 +179,14 @@ function Fight() {
   };
 
   const startTheFight = () => {
-    setEncounterStart(true);
     if (userAction === "") {
       enemyAttack().then(startUsersTurn);
     } else if (userAction === "basicAttack") {
       userBasicAttackTurn().then(nextRound);
     } else if (userAction === "abilityAttack") {
       userAbilityAttackTurn().then(nextRound);
+    } else if (userAction === "pokeballUse") {
+      userPokeballUseTurn().then(userCatchPokemonTurn).then(nextRound);
     }
   };
 
@@ -174,11 +222,28 @@ function Fight() {
       .then(startUsersTurn);
   };
 
+  const pokeballUseFunc = () => {
+    setUserAction("pokeballUse");
+    userPokeballUseTurn()
+      .then(userCatchPokemonTurn)
+      .then(nextRound)
+      .then(enemyAttack)
+      .then(startUsersTurn);
+  };
+
+  const potionUseFunc = () => {
+    setUserAction("potionUse");
+    userPotionUseTurn().then(nextRound).then(enemyAttack).then(startUsersTurn);
+  };
+
   const flee = () => {
     setFightStart(false);
-    setEncounterStart(false);
     setAdvantage(false);
     setUserTurn(false);
+    setEnemyCaught(false);
+    setWinner("");
+    setUserAction("");
+    setEnemy({});
   };
 
   if (!fightStart) {
@@ -222,10 +287,30 @@ function Fight() {
                   src={currentPokemon.img}
                   alt={currentPokemon.name}
                 ></img>
-                <p onClick={basicAttackFunc}>Basic attack</p>
-                <p onClick={abilityAttackFunc}>{currentPokemon.ability}</p>
-                <p>Use pokeball</p>
-                <p>Use potion</p>
+                <img
+                  style={
+                    pokeballThrow ? { transform: "translate(300px, 0)" } : null
+                  }
+                  src={ownedItem[0][3].img}
+                ></img>
+                <img
+                  style={
+                    pokeballThrow ? { transform: "translate(300px, 0)" } : null
+                  }
+                  src={ownedItem[0][16].img}
+                ></img>
+                <p className="userMove" onClick={basicAttackFunc}>
+                  Basic attack
+                </p>
+                <p className="userMove" onClick={abilityAttackFunc}>
+                  {currentPokemon.ability}
+                </p>
+                <p className="userMove" onClick={pokeballUseFunc}>
+                  Use pokeball
+                </p>
+                <p className="userMove" onClick={potionUseFunc}>
+                  Use potion
+                </p>
               </div>
             ) : (
               <div>
@@ -249,11 +334,16 @@ function Fight() {
           </div>
           <div className="enemy">
             <p className="pokeName">{enemy.name}</p>
-            <img
-              style={enemyTurn ? { transform: "translate(-300px, 0)" } : null}
-              src={enemy.img}
-              alt={enemy.name}
-            ></img>
+            {!enemyCaught ? (
+              <img
+                style={enemyTurn ? { transform: "translate(-300px, 0)" } : null}
+                src={enemy.img}
+                alt={enemy.name}
+              ></img>
+            ) : (
+              <h3>You caught {enemy.name}</h3>
+            )}
+
             <div>
               <p style={advantage ? { color: "red" } : { color: "ivory" }}>
                 Type: {enemy.type}
@@ -271,14 +361,20 @@ function Fight() {
             </div>
           </div>
         </div>
-        <div className="fightBtnsDiv">
-          <button className="startFightBtn" onClick={startTheFight}>
-            Fight
+        {enemyCaught ? (
+          <button className="fleeBtn" onClick={flee}>
+            Go back
           </button>
-          <button disabled={enemyTurn} className="fleeBtn" onClick={flee}>
-            Flee
-          </button>
-        </div>
+        ) : (
+          <div className="fightBtnsDiv">
+            <button className="startFightBtn" onClick={startTheFight}>
+              Fight
+            </button>
+            <button disabled={enemyTurn} className="fleeBtn" onClick={flee}>
+              Flee
+            </button>
+          </div>
+        )}
       </div>
     );
   }

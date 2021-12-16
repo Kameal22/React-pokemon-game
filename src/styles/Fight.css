@@ -66,3 +66,11 @@
 .pokeName {
   font-size: 1.1em;
 }
+
+.userMove {
+  cursor: pointer;
+}
+
+.userMove:hover {
+  color: red;
+}
