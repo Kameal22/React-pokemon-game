@@ -10,16 +10,18 @@ import {
   userAtt,
   usePotion,
 } from "../utills/FightUtills";
-import { OwnedItemsContext } from "../contexts/itemContexts/OwnedItemsContext";
 import { OwnedPokemonContext } from "../contexts/pokemonContexts/OwnedPokemonContext";
+import { ItemsListContext } from "../contexts/itemContexts/ItemsListContext";
+
+//DIASPEAR START BUTTON WHEN FIGHT STARTS
 
 function Fight() {
   // const { level, levelUpFunc, exp, expUpFunc, requiredExp, encounters } =
   //   useContext(CharacterContext);
   const { pokemonList } = useContext(PokemonListContext);
   const { currentPokemon, changeStats } = useContext(CurrentPokemonContext);
-  const { ownedItem } = useContext(OwnedItemsContext);
   const { discoverPokemon } = useContext(OwnedPokemonContext);
+  const { itemsList } = useContext(ItemsListContext);
 
   const [enemy, setEnemy] = useState({});
   const [fightStart, setFightStart] = useState(false);
@@ -33,6 +35,7 @@ function Fight() {
   const [pokeballThrow, setPokeballThrow] = useState(false);
   const [enemyCaught, setEnemyCaught] = useState(false);
   const [potionUsed, setPotionUse] = useState(false);
+  const [userMoving, setUserMoving] = useState(false);
 
   // const levelUp = (level) => {
   //   return levelUpFunc(level);
@@ -108,6 +111,7 @@ function Fight() {
       return new Promise((resolve) => {
         setTimeout(() => {
           setUserTurn(true);
+          setUserMoving(true);
           setEnemy((prevStats) => ({
             ...prevStats,
             health: Math.round(enemyHpAfterAtt),
@@ -123,12 +127,13 @@ function Fight() {
       return new Promise((resolve) => {
         setTimeout(() => {
           setUserTurn(true);
+          setUserMoving(true);
           setEnemy((prevStats) => ({
             ...prevStats,
             health: 1000000,
           }));
           resolve();
-        }, 1500);
+        }, 1000);
       });
     }
   };
@@ -138,6 +143,7 @@ function Fight() {
       return new Promise((resolve) => {
         setTimeout(() => {
           setPokeballThrow(true);
+          setUserMoving(true);
           resolve();
         }, 1000);
       });
@@ -150,12 +156,13 @@ function Fight() {
         setTimeout(() => {
           discoverNewPokemon(enemy);
           setEnemyCaught(true);
+          setPokeballThrow(false);
         }, 1000);
       } else {
         setTimeout(() => {
           setPokeballThrow(false);
           resolve();
-        }, 1500);
+        }, 1000);
       }
     });
   };
@@ -165,6 +172,7 @@ function Fight() {
       return new Promise((resolve) => {
         setTimeout(() => {
           setPotionUse(true);
+          setUserMoving(true);
           resolve();
         }, 1000);
       });
@@ -176,6 +184,7 @@ function Fight() {
       setTimeout(() => {
         potionHeal(currentPokemon, userHpAfterHealing);
         setPotionUse(false);
+        setUserMoving(true);
         resolve();
       }, 1000);
     });
@@ -186,6 +195,7 @@ function Fight() {
       setTimeout(() => {
         setUserTurn(false);
         setUserAttack(false);
+        setUserMoving(false);
         resolve();
       }, 1000);
     });
@@ -216,13 +226,13 @@ function Fight() {
       setTimeout(() => {
         flee();
         setWinner(enemy.name);
-      }, 1000);
+      }, 500);
     } else if (enemy.health <= 0) {
       setFightEnd(true);
       setTimeout(() => {
         flee();
         setWinner(currentPokemon.name);
-      }, 1000);
+      }, 500);
     }
   };
 
@@ -267,6 +277,7 @@ function Fight() {
     setWinner("");
     setUserAction("");
     setUserAttack(false);
+    setUserMoving(false);
   };
 
   if (!fightStart) {
@@ -277,7 +288,10 @@ function Fight() {
             <Link to="/">Home</Link>
           </div>
           <h2 className="fightHeading">Fight</h2>
-          <div className="fightSelectingDiv">
+          <div
+            onClick={console.log(itemsList[0])}
+            className="fightSelectingDiv"
+          >
             <h4 onClick={startEncounter} style={{ cursor: "pointer" }}>
               Encounter
             </h4>
@@ -306,107 +320,222 @@ function Fight() {
       </div>
     );
   } else if (!enemyCaught) {
-    return (
-      <div className="fightDiv">
-        <h2 className="fightHeading">Fight</h2>
-        <div className="startedFightDiv">
-          <div className="user">
-            {userAttack ? (
-              <div>
-                <p className="pokeName">{currentPokemon.name}</p>
-                <img
-                  style={userTurn ? { transform: "translate(300px, 0)" } : null}
-                  src={currentPokemon.img}
-                  alt={currentPokemon.name}
-                ></img>
-                <img
-                  style={
-                    potionUsed ? { transform: "translate(0, -20px" } : null
-                  }
-                  src={ownedItem[0][16].img}
-                ></img>
-                <img
-                  style={
-                    pokeballThrow ? { transform: "translate(300px, 0)" } : null
-                  }
-                  src={ownedItem[0][3].img}
-                ></img>
-                {potionUsed ? (
-                  <p style={{ color: "green", fontWeight: "bold" }}>+ 25 hp!</p>
-                ) : (
-                  <p className="userMove" onClick={basicAttackFunc}>
-                    Basic attack
+    if (!userMoving) {
+      return (
+        <div className="fightDiv">
+          <h2 className="fightHeading">Fight</h2>
+          <div className="startedFightDiv">
+            <div className="user">
+              {userAttack ? (
+                <div>
+                  <p className="pokeName">{currentPokemon.name}</p>
+                  <img
+                    style={
+                      userTurn ? { transform: "translate(300px, 0)" } : null
+                    }
+                    src={currentPokemon.img}
+                    alt={currentPokemon.name}
+                  ></img>
+                  <img
+                    style={
+                      potionUsed ? { transform: "translate(0, -20px" } : null
+                    }
+                    src={itemsList[1].img}
+                  ></img>
+                  <img
+                    style={
+                      pokeballThrow
+                        ? { transform: "translate(300px, 0)" }
+                        : null
+                    }
+                    src={itemsList[0].img}
+                  ></img>
+                  {potionUsed ? (
+                    <p style={{ color: "green", fontWeight: "bold" }}>
+                      + 25 hp!
+                    </p>
+                  ) : (
+                    <p className="userMove" onClick={basicAttackFunc}>
+                      Basic attack
+                    </p>
+                  )}
+                  <p className="userMove" onClick={abilityAttackFunc}>
+                    {currentPokemon.ability}
                   </p>
-                )}
-                <p className="userMove" onClick={abilityAttackFunc}>
-                  {currentPokemon.ability}
-                </p>
-                <p className="userMove" onClick={pokeballUseFunc}>
-                  Use pokeball
-                </p>
-                <p className="userMove" onClick={potionUseFunc}>
-                  Use potion
-                </p>
-              </div>
-            ) : (
-              <div>
-                <p className="pokeName">{currentPokemon.name}</p>
+                  <p className="userMove" onClick={pokeballUseFunc}>
+                    Use pokeball
+                  </p>
+                  <p className="userMove" onClick={potionUseFunc}>
+                    Use potion
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <p className="pokeName">{currentPokemon.name}</p>
+                  <img
+                    style={
+                      userTurn ? { transform: "translate(300px, 0)" } : null
+                    }
+                    src={currentPokemon.img}
+                    alt={currentPokemon.name}
+                  ></img>
+                  <p
+                    style={advantage ? { color: "green" } : { color: "ivory" }}
+                  >
+                    Type: {currentPokemon.type}
+                  </p>
+                  <p style={enemyTurn ? { color: "red" } : { color: "ivory" }}>
+                    Hp: {currentPokemon.health}
+                  </p>
+                  <p>Att: {currentPokemon.attack}</p>
+                  <p>Def: {currentPokemon.defense}</p>
+                  <p>Ability: {currentPokemon.ability}</p>
+                </div>
+              )}
+            </div>
+            <div className="enemy">
+              <p className="pokeName">{enemy.name}</p>
+              {!enemyCaught ? (
                 <img
-                  style={userTurn ? { transform: "translate(300px, 0)" } : null}
-                  src={currentPokemon.img}
-                  alt={currentPokemon.name}
+                  style={
+                    enemyTurn ? { transform: "translate(-300px, 0)" } : null
+                  }
+                  src={enemy.img}
+                  alt={enemy.name}
                 ></img>
-                <p style={advantage ? { color: "green" } : { color: "ivory" }}>
-                  Type: {currentPokemon.type}
-                </p>
-                <p style={enemyTurn ? { color: "red" } : { color: "ivory" }}>
-                  Hp: {currentPokemon.health}
-                </p>
-                <p>Att: {currentPokemon.attack}</p>
-                <p>Def: {currentPokemon.defense}</p>
-                <p>Ability: {currentPokemon.ability}</p>
-              </div>
-            )}
-          </div>
-          <div className="enemy">
-            <p className="pokeName">{enemy.name}</p>
-            {!enemyCaught ? (
-              <img
-                style={enemyTurn ? { transform: "translate(-300px, 0)" } : null}
-                src={enemy.img}
-                alt={enemy.name}
-              ></img>
-            ) : (
-              <h3>You caught {enemy.name}</h3>
-            )}
+              ) : (
+                <h3>You caught {enemy.name}</h3>
+              )}
 
-            <div>
-              <p style={advantage ? { color: "red" } : { color: "ivory" }}>
-                Type: {enemy.type}
-              </p>
-              <p style={userTurn ? { color: "red" } : { color: "ivory" }}>
-                Hp: {enemy.health}
-              </p>
-              <p style={advantage ? { color: "red" } : { color: "ivory" }}>
-                Att: {advantage ? enemy.attack / 2 : enemy.attack}
-              </p>
-              <p style={advantage ? { color: "red" } : { color: "ivory" }}>
-                Def: {advantage ? enemy.defense / 2 : enemy.defense}
-              </p>
-              <p>Ability: {enemy.ability}</p>
+              <div>
+                <p style={advantage ? { color: "red" } : { color: "ivory" }}>
+                  Type: {enemy.type}
+                </p>
+                <p style={userTurn ? { color: "red" } : { color: "ivory" }}>
+                  Hp: {enemy.health}
+                </p>
+                <p style={advantage ? { color: "red" } : { color: "ivory" }}>
+                  Att: {advantage ? enemy.attack / 2 : enemy.attack}
+                </p>
+                <p style={advantage ? { color: "red" } : { color: "ivory" }}>
+                  Def: {advantage ? enemy.defense / 2 : enemy.defense}
+                </p>
+                <p>Ability: {enemy.ability}</p>
+              </div>
             </div>
           </div>
+          <div className="fightBtnsDiv">
+            <button className="startFightBtn" onClick={startTheFight}>
+              Fight
+            </button>
+            <button disabled={enemyTurn} className="fleeBtn" onClick={flee}>
+              Flee
+            </button>
+          </div>
         </div>
-        <div className="fightBtnsDiv">
-          <button className="startFightBtn" onClick={startTheFight}>
-            Fight
-          </button>
-          <button disabled={enemyTurn} className="fleeBtn" onClick={flee}>
-            Flee
-          </button>
+      );
+    } else if (userMoving) {
+      return (
+        <div className="fightDiv">
+          <h2 className="fightHeading">Fight</h2>
+          <div className="startedFightDiv">
+            <div className="user">
+              {userAttack ? (
+                <div>
+                  <p className="pokeName">{currentPokemon.name}</p>
+                  <img
+                    style={
+                      userTurn ? { transform: "translate(300px, 0)" } : null
+                    }
+                    src={currentPokemon.img}
+                    alt={currentPokemon.name}
+                  ></img>
+                  <img
+                    style={
+                      potionUsed ? { transform: "translate(0, -20px" } : null
+                    }
+                    src={itemsList[1].img}
+                  ></img>
+                  <img
+                    style={
+                      pokeballThrow
+                        ? { transform: "translate(300px, 0)" }
+                        : null
+                    }
+                    src={itemsList[0].img}
+                  ></img>
+                  {potionUsed ? (
+                    <p style={{ color: "green", fontWeight: "bold" }}>
+                      + 25 hp!
+                    </p>
+                  ) : null}
+                </div>
+              ) : (
+                <div>
+                  <p className="pokeName">{currentPokemon.name}</p>
+                  <img
+                    style={
+                      userTurn ? { transform: "translate(300px, 0)" } : null
+                    }
+                    src={currentPokemon.img}
+                    alt={currentPokemon.name}
+                  ></img>
+                  <p
+                    style={advantage ? { color: "green" } : { color: "ivory" }}
+                  >
+                    Type: {currentPokemon.type}
+                  </p>
+                  <p style={enemyTurn ? { color: "red" } : { color: "ivory" }}>
+                    Hp: {currentPokemon.health}
+                  </p>
+                  <p>Att: {currentPokemon.attack}</p>
+                  <p>Def: {currentPokemon.defense}</p>
+                  <p>Ability: {currentPokemon.ability}</p>
+                </div>
+              )}
+            </div>
+            <div className="enemy">
+              <p className="pokeName">{enemy.name}</p>
+              {!enemyCaught ? (
+                <img
+                  style={
+                    enemyTurn ? { transform: "translate(-300px, 0)" } : null
+                  }
+                  src={enemy.img}
+                  alt={enemy.name}
+                ></img>
+              ) : (
+                <h3>You caught {enemy.name}</h3>
+              )}
+
+              <div>
+                <p style={advantage ? { color: "red" } : { color: "ivory" }}>
+                  Type: {enemy.type}
+                </p>
+                <p style={userTurn ? { color: "red" } : { color: "ivory" }}>
+                  Hp: {enemy.health}
+                </p>
+                <p style={advantage ? { color: "red" } : { color: "ivory" }}>
+                  Att: {advantage ? enemy.attack / 2 : enemy.attack}
+                </p>
+                <p style={advantage ? { color: "red" } : { color: "ivory" }}>
+                  Def: {advantage ? enemy.defense / 2 : enemy.defense}
+                </p>
+                <p>Ability: {enemy.ability}</p>
+              </div>
+            </div>
+          </div>
+          <div className="fightBtnsDiv">
+            <button className="startFightBtn" onClick={startTheFight}>
+              Fight
+            </button>
+            <button disabled={enemyTurn} className="fleeBtn" onClick={flee}>
+              Flee
+            </button>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
   }
 }
 export default Fight;

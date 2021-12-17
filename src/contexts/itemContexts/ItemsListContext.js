@@ -4,10 +4,14 @@ export const ItemsListContext = createContext();
 
 export function ItemsListModifier(props) {
   const [itemsList, setItemsList] = useState([]);
-  const [discoverItem, setDiscoveredItem] = useState([]);
 
   const setInitialList = (itemsList) => {
     setItemsList(itemsList);
+  };
+
+  const getItem = (item) => {
+    setItemsList((prevArr) => [...prevArr, item]);
+    window.localStorage.setItem("ownedItems", JSON.stringify(item));
   };
 
   return (
@@ -15,8 +19,7 @@ export function ItemsListModifier(props) {
       value={{
         setInitialList,
         itemsList,
-        discoverItem,
-        setDiscoveredItem,
+        getItem,
       }}
     >
       {props.children}

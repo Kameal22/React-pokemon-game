@@ -1,22 +1,10 @@
 import "../styles/Equipment.css";
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { OwnedItemsContext } from "../contexts/itemContexts/OwnedItemsContext";
 import { ItemsListContext } from "../contexts/itemContexts/ItemsListContext";
 
 function Equipment() {
-  const { ownedItem } = useContext(OwnedItemsContext);
   const { itemsList } = useContext(ItemsListContext);
-
-  const setStarterItems = () => {
-    const starterItems = [];
-
-    starterItems.push(ownedItem[0][3], ownedItem[0][16], ownedItem[0][17]);
-
-    return starterItems;
-  };
-
-  const starters = setStarterItems();
 
   return (
     <div className="equipmentDiv">
@@ -25,7 +13,7 @@ function Equipment() {
       </div>
       <h2 className="equipmentHeading">Your items</h2>
       <div className="itemsDiv">
-        {starters.map((item) => {
+        {itemsList.map((item) => {
           return <img className="itemImg" src={item.img} alt={item.name} />;
         })}
       </div>

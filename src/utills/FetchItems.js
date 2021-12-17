@@ -28,7 +28,12 @@ function FetchItem() {
             };
             fetchedItems.push(itemObject);
           });
-          sentListToContext(fetchedItems);
+          const actualItems = [
+            fetchedItems[3],
+            fetchedItems[16],
+            fetchedItems[17],
+          ];
+          sentListToContext(actualItems);
         })
       );
     }
