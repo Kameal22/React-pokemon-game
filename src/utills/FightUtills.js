@@ -4,7 +4,7 @@ const checkElement = (userElement, enemyElement, setAdv, adv) => {
     enemyElement === "rock" ||
     enemyElement === "ground"
   ) {
-    setAdv(!adv);
+    setAdv(true);
   }
 };
 
