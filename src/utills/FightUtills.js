@@ -32,10 +32,21 @@ const userAtt = (userAtt, enemyDef, enemyHp) => {
   return hpAfterAttack;
 };
 
+const userSpecialAtt = (userAtt, enemyDef, enemyHp) => {
+  let hpAfterAttack = 0;
+  let loweredDefense = enemyDef * 0.65;
+  if (userAtt < loweredDefense) {
+    hpAfterAttack = enemyHp - 25;
+  } else {
+    let actualPower = userAtt - loweredDefense;
+    hpAfterAttack = enemyHp - actualPower;
+  }
+};
+
 const usePotion = (userHp, potionHeal) => {
   let hpAfterHealing = userHp + potionHeal;
   return hpAfterHealing;
 };
 
-export { checkElement, enemyAtt, userAtt, usePotion };
+export { checkElement, enemyAtt, userAtt, usePotion, userSpecialAtt };
 //grass, fire, water, bug, normal, poison, electric, ground, fairy, psychic, fighting, rock, ghost,

@@ -9,11 +9,10 @@ import {
   enemyAtt,
   userAtt,
   usePotion,
+  userSpecialAtt,
 } from "../utills/FightUtills";
 import { OwnedPokemonContext } from "../contexts/pokemonContexts/OwnedPokemonContext";
 import { ItemsListContext } from "../contexts/itemContexts/ItemsListContext";
-
-//DIASPEAR START BUTTON WHEN FIGHT STARTS
 
 function Fight() {
   // const { level, levelUpFunc, exp, expUpFunc, requiredExp, encounters } =
@@ -36,6 +35,7 @@ function Fight() {
   const [enemyCaught, setEnemyCaught] = useState(false);
   const [potionUsed, setPotionUse] = useState(false);
   const [userMoving, setUserMoving] = useState(false);
+  const [encounterStart, setEncounterStart] = useState(false);
 
   // const levelUp = (level) => {
   //   return levelUpFunc(level);
@@ -69,6 +69,12 @@ function Fight() {
   );
 
   const enemyHpAfterAtt = userAtt(
+    currentPokemon.attack,
+    enemy.defense,
+    enemy.health
+  );
+
+  const enemyHpAfterAbility = userAtt(
     currentPokemon.attack,
     enemy.defense,
     enemy.health
@@ -130,7 +136,7 @@ function Fight() {
           setUserMoving(true);
           setEnemy((prevStats) => ({
             ...prevStats,
-            health: 1000000,
+            health: Math.round(enemyHpAfterAbility),
           }));
           resolve();
         }, 1000);
@@ -207,6 +213,7 @@ function Fight() {
   };
 
   const startTheFight = () => {
+    setEncounterStart(true);
     if (userAction === "") {
       enemyAttack().then(startUsersTurn);
     } else if (userAction === "basicAttack") {
@@ -222,17 +229,15 @@ function Fight() {
 
   const checkFightEnd = () => {
     if (currentPokemon.health <= 0) {
-      setFightEnd(true);
       setTimeout(() => {
         flee();
         setWinner(enemy.name);
-      }, 500);
+      }, 1000);
     } else if (enemy.health <= 0) {
-      setFightEnd(true);
       setTimeout(() => {
         flee();
         setWinner(currentPokemon.name);
-      }, 500);
+      }, 1000);
     }
   };
 
@@ -274,42 +279,26 @@ function Fight() {
     setFightStart(false);
     setAdvantage(false);
     setEnemyCaught(false);
-    setWinner("");
     setUserAction("");
     setUserAttack(false);
     setUserMoving(false);
+    setEncounterStart(false);
   };
 
   if (!fightStart) {
-    if (!fightEnd) {
-      return (
-        <div className="fightDiv">
-          <div className="navLinksScd">
-            <Link to="/">Home</Link>
-          </div>
-          <h2 className="fightHeading">Fight</h2>
-          <div
-            onClick={console.log(itemsList[0])}
-            className="fightSelectingDiv"
-          >
-            <h4 onClick={startEncounter} style={{ cursor: "pointer" }}>
-              Encounter
-            </h4>
-          </div>
+    return (
+      <div className="fightDiv">
+        <div className="navLinksScd">
+          <Link to="/">Home</Link>
         </div>
-      );
-    } else {
-      return (
-        <div className="fightDiv">
-          <div className="navLinksScd">
-            <Link to="/">Home</Link>
-          </div>
-          <div className="fightSelectingDiv">
-            <h2>winner is {winner}</h2>
-          </div>
+        <h2 className="fightHeading">Fight</h2>
+        <div className="fightSelectingDiv">
+          <h4 onClick={startEncounter} style={{ cursor: "pointer" }}>
+            Encounter
+          </h4>
         </div>
-      );
-    }
+      </div>
+    );
   } else if (enemyCaught) {
     return (
       <div className="fightDiv">
@@ -368,6 +357,9 @@ function Fight() {
                   <p className="userMove" onClick={potionUseFunc}>
                     Use potion
                   </p>
+                  <p className="userMove" onClick={flee}>
+                    Flee
+                  </p>
                 </div>
               ) : (
                 <div>
@@ -424,14 +416,16 @@ function Fight() {
               </div>
             </div>
           </div>
-          <div className="fightBtnsDiv">
-            <button className="startFightBtn" onClick={startTheFight}>
-              Fight
-            </button>
-            <button disabled={enemyTurn} className="fleeBtn" onClick={flee}>
-              Flee
-            </button>
-          </div>
+          {encounterStart ? null : (
+            <div className="fightBtnsDiv">
+              <button className="startFightBtn" onClick={startTheFight}>
+                Fight
+              </button>
+              <button disabled={enemyTurn} className="fleeBtn" onClick={flee}>
+                Flee
+              </button>
+            </div>
+          )}
         </div>
       );
     } else if (userMoving) {
@@ -524,14 +518,6 @@ function Fight() {
                 <p>Ability: {enemy.ability}</p>
               </div>
             </div>
-          </div>
-          <div className="fightBtnsDiv">
-            <button className="startFightBtn" onClick={startTheFight}>
-              Fight
-            </button>
-            <button disabled={enemyTurn} className="fleeBtn" onClick={flee}>
-              Flee
-            </button>
           </div>
         </div>
       );
