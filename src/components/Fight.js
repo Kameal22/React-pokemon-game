@@ -24,18 +24,18 @@ function Fight() {
 
   const [enemy, setEnemy] = useState({});
   const [fightStart, setFightStart] = useState(false);
+  const [encounterStart, setEncounterStart] = useState(false);
   const [enemyTurn, setEnemyTurn] = useState(false);
   const [userTurn, setUserTurn] = useState(false);
   const [advantage, setAdvantage] = useState(false);
-  const [fightEnd, setFightEnd] = useState(false);
-  const [winner, setWinner] = useState("");
   const [userAttack, setUserAttack] = useState(false);
   const [userAction, setUserAction] = useState("");
   const [pokeballThrow, setPokeballThrow] = useState(false);
   const [enemyCaught, setEnemyCaught] = useState(false);
   const [potionUsed, setPotionUse] = useState(false);
   const [userMoving, setUserMoving] = useState(false);
-  const [encounterStart, setEncounterStart] = useState(false);
+  const [win, setWin] = useState(false);
+  const [lost, setLoss] = useState(false);
 
   // const levelUp = (level) => {
   //   return levelUpFunc(level);
@@ -89,71 +89,61 @@ function Fight() {
   };
 
   const enemyAttack = () => {
-    if (!fightEnd) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          setEnemyTurn(true);
-          absorbEnemyAttack(currentPokemon, Math.round(userHpAfterAtt));
-          resolve();
-        }, 1000);
-      });
-    }
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        setEnemyTurn(true);
+        absorbEnemyAttack(currentPokemon, Math.round(userHpAfterAtt));
+        resolve();
+      }, 1000);
+    });
   };
 
   const startUsersTurn = () => {
-    if (!fightEnd) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          setEnemyTurn(false);
-          setUserAttack(true);
-          resolve();
-        }, 1000);
-      });
-    }
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        setEnemyTurn(false);
+        setUserAttack(true);
+        resolve();
+      }, 1000);
+    });
   };
 
   const userBasicAttackTurn = () => {
-    if (!fightEnd) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          setUserTurn(true);
-          setUserMoving(true);
-          setEnemy((prevStats) => ({
-            ...prevStats,
-            health: Math.round(enemyHpAfterAtt),
-          }));
-          resolve();
-        }, 1000);
-      });
-    }
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        setUserTurn(true);
+        setUserMoving(true);
+        setEnemy((prevStats) => ({
+          ...prevStats,
+          health: Math.round(enemyHpAfterAtt),
+        }));
+        resolve();
+      }, 1000);
+    });
   };
 
   const userAbilityAttackTurn = () => {
-    if (!fightEnd) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          setUserTurn(true);
-          setUserMoving(true);
-          setEnemy((prevStats) => ({
-            ...prevStats,
-            health: Math.round(enemyHpAfterAbility),
-          }));
-          resolve();
-        }, 1000);
-      });
-    }
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        setUserTurn(true);
+        setUserMoving(true);
+        setEnemy((prevStats) => ({
+          ...prevStats,
+          health: Math.round(enemyHpAfterAbility),
+        }));
+        resolve();
+      }, 1000);
+    });
   };
 
   const userPokeballUseTurn = () => {
-    if (!fightEnd) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          setPokeballThrow(true);
-          setUserMoving(true);
-          resolve();
-        }, 1000);
-      });
-    }
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        setPokeballThrow(true);
+        setUserMoving(true);
+        resolve();
+      }, 1000);
+    });
   };
 
   const userCatchPokemonTurn = () => {
@@ -174,15 +164,13 @@ function Fight() {
   };
 
   const userPotionUseTurn = () => {
-    if (!fightEnd) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          setPotionUse(true);
-          setUserMoving(true);
-          resolve();
-        }, 1000);
-      });
-    }
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        setPotionUse(true);
+        setUserMoving(true);
+        resolve();
+      }, 1000);
+    });
   };
 
   const healUserTurn = () => {
@@ -208,8 +196,12 @@ function Fight() {
   };
 
   const startEncounter = () => {
-    setFightStart(true);
-    showEnemy();
+    if (currentPokemon.health > 0) {
+      setFightStart(true);
+      showEnemy();
+    } else {
+      alert("Heal your Pokemon");
+    }
   };
 
   const startTheFight = () => {
@@ -230,13 +222,11 @@ function Fight() {
   const checkFightEnd = () => {
     if (currentPokemon.health <= 0) {
       setTimeout(() => {
-        flee();
-        setWinner(enemy.name);
+        setLoss(true);
       }, 1000);
     } else if (enemy.health <= 0) {
       setTimeout(() => {
-        flee();
-        setWinner(currentPokemon.name);
+        setWin(true);
       }, 1000);
     }
   };
@@ -283,6 +273,8 @@ function Fight() {
     setUserAttack(false);
     setUserMoving(false);
     setEncounterStart(false);
+    setWin(false);
+    setLoss(false);
   };
 
   if (!fightStart) {
@@ -297,6 +289,25 @@ function Fight() {
             Encounter
           </h4>
         </div>
+      </div>
+    );
+  } else if (win) {
+    return (
+      <div className="fightDiv">
+        <h1 style={{ color: "green" }}>You win!</h1>
+        <p style={{ color: "ivory" }}>+10 exp!</p>
+        <button className="fleeBtn" onClick={flee}>
+          Go back
+        </button>
+      </div>
+    );
+  } else if (lost) {
+    return (
+      <div className="fightDiv">
+        <h1 style={{ color: "red" }}>You lost</h1>
+        <button className="fleeBtn" onClick={flee}>
+          Go back
+        </button>
       </div>
     );
   } else if (enemyCaught) {
