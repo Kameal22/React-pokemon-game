@@ -47,9 +47,6 @@ function Fight() {
   useEffect(() => {
     checkElement(currentPokemon.type, enemy.type, setAdvantage, advantage);
     checkFightEnd();
-    if (win) {
-      console.log("win"); //LOGS OUT IN RIGHT TIME NOW
-    }
   }, [enemy, currentPokemon, userMoving]);
 
   const discoverNewPokemon = (pokemon) => {
@@ -127,7 +124,7 @@ function Fight() {
   const stopTheFight = () => {
     return new Promise((resolve, reject) => {
       if (win) {
-        console.log("win"); //NOT WORKING PROPABLY BECAUSE I DON'D DO STUFF THAT FUNCTION FLEE DOES
+        reject();
       } else {
         setEnemyTurn(false);
         setUserAttack(true);
@@ -235,14 +232,10 @@ function Fight() {
 
   const checkFightEnd = () => {
     if (currentPokemon.health <= 0) {
-      setTimeout(() => {
-        setLoss(true);
-      }, 1000);
+      setLoss(true);
     } else if (enemy.health <= 0) {
-      setTimeout(() => {
-        setWin(true);
-        expUp(10);
-      }, 1000);
+      setWin(true);
+      expUp(10);
     }
   };
 
