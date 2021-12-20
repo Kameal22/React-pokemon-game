@@ -11,8 +11,8 @@ export function CharacterModifier(props) {
     levelUp(level + 1);
   };
 
-  const expUpFunc = (exp) => {
-    expUp(exp + 1);
+  const expUpFunc = (value) => {
+    expUp(exp + value);
   };
 
   return (

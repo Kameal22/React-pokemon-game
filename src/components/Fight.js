@@ -1,7 +1,7 @@
 import "../styles/Fight.css";
 import React, { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-// import { CharacterContext } from "../contexts/playerContexts/CharacterContexts";
+import { CharacterContext } from "../contexts/playerContexts/CharacterContexts";
 import { PokemonListContext } from "../contexts/pokemonContexts/PokemonListContext";
 import { CurrentPokemonContext } from "../contexts/pokemonContexts/CurrentPokemonContext";
 import {
@@ -15,8 +15,7 @@ import { OwnedPokemonContext } from "../contexts/pokemonContexts/OwnedPokemonCon
 import { ItemsListContext } from "../contexts/itemContexts/ItemsListContext";
 
 function Fight() {
-  // const { level, levelUpFunc, exp, expUpFunc, requiredExp, encounters } =
-  //   useContext(CharacterContext);
+  const { expUpFunc } = useContext(CharacterContext);
   const { pokemonList } = useContext(PokemonListContext);
   const { currentPokemon, changeStats } = useContext(CurrentPokemonContext);
   const { discoverPokemon } = useContext(OwnedPokemonContext);
@@ -41,9 +40,11 @@ function Fight() {
   //   return levelUpFunc(level);
   // };
 
-  // const expUp = (exp) => {
-  //   return expUpFunc(exp);
-  // };
+  const expUp = (value) => {
+    return expUpFunc(value);
+  };
+
+  //Somehow prevent main fight functions when you die or win. Because right now after it you still obtain dmg from enemy and even if You win you still can lose..
 
   useEffect(() => {
     checkElement(currentPokemon.type, enemy.type, setAdvantage, advantage);
@@ -74,7 +75,7 @@ function Fight() {
     enemy.health
   );
 
-  const enemyHpAfterAbility = userAtt(
+  const enemyHpAfterAbility = userSpecialAtt(
     currentPokemon.attack,
     enemy.defense,
     enemy.health
@@ -109,7 +110,7 @@ function Fight() {
   };
 
   const userBasicAttackTurn = () => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       setTimeout(() => {
         setUserTurn(true);
         setUserMoving(true);
@@ -227,6 +228,7 @@ function Fight() {
     } else if (enemy.health <= 0) {
       setTimeout(() => {
         setWin(true);
+        expUp(10);
       }, 1000);
     }
   };
@@ -392,16 +394,11 @@ function Fight() {
           </div>
           <div className="enemy">
             <p className="pokeName">{enemy.name}</p>
-            {!enemyCaught ? (
-              <img
-                style={enemyTurn ? { transform: "translate(-300px, 0)" } : null}
-                src={enemy.img}
-                alt={enemy.name}
-              ></img>
-            ) : (
-              <h3>You caught {enemy.name}</h3>
-            )}
-
+            <img
+              style={enemyTurn ? { transform: "translate(-300px, 0)" } : null}
+              src={enemy.img}
+              alt={enemy.name}
+            ></img>
             <div>
               <p style={advantage ? { color: "red" } : { color: "ivory" }}>
                 Type: {enemy.type}

@@ -1,4 +1,4 @@
-const checkElement = (userElement, enemyElement, setAdv, adv) => {
+const checkElement = (userElement, enemyElement, setAdv) => {
   if (
     (userElement === "water" && enemyElement === "fire") ||
     enemyElement === "rock" ||
@@ -33,14 +33,15 @@ const userAtt = (userAtt, enemyDef, enemyHp) => {
 };
 
 const userSpecialAtt = (userAtt, enemyDef, enemyHp) => {
-  let hpAfterAttack = 0;
+  let hpAfterAbility = 0;
   let loweredDefense = enemyDef * 0.65;
   if (userAtt < loweredDefense) {
-    hpAfterAttack = enemyHp - 25;
+    hpAfterAbility = enemyHp - 25;
   } else {
     let actualPower = userAtt - loweredDefense;
-    hpAfterAttack = enemyHp - actualPower;
+    hpAfterAbility = enemyHp - actualPower;
   }
+  return hpAfterAbility;
 };
 
 const usePotion = (userHp, potionHeal) => {
