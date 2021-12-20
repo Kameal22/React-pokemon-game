@@ -44,8 +44,6 @@ function Fight() {
     return expUpFunc(value);
   };
 
-  //Somehow prevent main fight functions when you die or win. Because right now after it you still obtain dmg from enemy and even if You win you still can lose..
-
   useEffect(() => {
     checkElement(currentPokemon.type, enemy.type, setAdvantage, advantage);
     checkFightEnd();
@@ -110,7 +108,7 @@ function Fight() {
   };
 
   const userBasicAttackTurn = () => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         setUserTurn(true);
         setUserMoving(true);
@@ -120,6 +118,22 @@ function Fight() {
         }));
         resolve();
       }, 1000);
+    });
+  };
+
+  const stopTheFight = () => {
+    return new Promise((resolve) => {
+      if (win) {
+        setTimeout(() => {
+          console.log("win");
+        }, 1000); //NOT WORKING PROPABLY BECAUSE I DON'D DO STUFF THAT FUNCTION FLEE DOES
+      } else {
+        setTimeout(() => {
+          setEnemyTurn(false);
+          setUserAttack(true);
+          resolve();
+        }, 1000);
+      }
     });
   };
 
@@ -210,13 +224,13 @@ function Fight() {
     if (userAction === "") {
       enemyAttack().then(startUsersTurn);
     } else if (userAction === "basicAttack") {
-      userBasicAttackTurn().then(nextRound);
+      userBasicAttackTurn();
     } else if (userAction === "abilityAttack") {
-      userAbilityAttackTurn().then(nextRound);
+      userAbilityAttackTurn();
     } else if (userAction === "pokeballUse") {
-      userPokeballUseTurn().then(userCatchPokemonTurn).then(nextRound);
+      userPokeballUseTurn();
     } else if (userAction === "potionUse") {
-      userPotionUseTurn().then(healUserTurn).then(nextRound);
+      userPotionUseTurn();
     }
   };
 
@@ -236,6 +250,7 @@ function Fight() {
   const basicAttackFunc = () => {
     setUserAction("basicAttack");
     userBasicAttackTurn()
+      .then(stopTheFight)
       .then(nextRound)
       .then(enemyAttack)
       .then(startUsersTurn);
