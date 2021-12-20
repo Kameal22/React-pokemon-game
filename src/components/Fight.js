@@ -47,7 +47,10 @@ function Fight() {
   useEffect(() => {
     checkElement(currentPokemon.type, enemy.type, setAdvantage, advantage);
     checkFightEnd();
-  }, [enemy, currentPokemon]);
+    if (win) {
+      console.log("win"); //LOGS OUT IN RIGHT TIME NOW
+    }
+  }, [enemy, currentPokemon, userMoving]);
 
   const discoverNewPokemon = (pokemon) => {
     return discoverPokemon(pokemon);
@@ -122,17 +125,13 @@ function Fight() {
   };
 
   const stopTheFight = () => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       if (win) {
-        setTimeout(() => {
-          console.log("win");
-        }, 1000); //NOT WORKING PROPABLY BECAUSE I DON'D DO STUFF THAT FUNCTION FLEE DOES
+        console.log("win"); //NOT WORKING PROPABLY BECAUSE I DON'D DO STUFF THAT FUNCTION FLEE DOES
       } else {
-        setTimeout(() => {
-          setEnemyTurn(false);
-          setUserAttack(true);
-          resolve();
-        }, 1000);
+        setEnemyTurn(false);
+        setUserAttack(true);
+        resolve();
       }
     });
   };
