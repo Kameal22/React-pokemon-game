@@ -1,5 +1,6 @@
 import "../../styles/Fight.css";
 import React, { useContext, useState, useEffect } from "react";
+import EnemyStats from "./EnemyStats";
 import { Link } from "react-router-dom";
 import { CharacterContext } from "../../contexts/playerContexts/CharacterContexts";
 import { PokemonListContext } from "../../contexts/pokemonContexts/PokemonListContext";
@@ -286,6 +287,7 @@ function Fight() {
           <h4 onClick={startEncounter} style={{ cursor: "pointer" }}>
             Encounter
           </h4>
+          <EnemyStats />
         </div>
       </div>
     );
