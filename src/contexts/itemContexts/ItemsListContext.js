@@ -14,12 +14,22 @@ export function ItemsListModifier(props) {
     window.localStorage.setItem("ownedItems", JSON.stringify(item));
   };
 
+  const useItem = (item) => {
+    const itemsArr = [...itemsList];
+    const index = itemsArr.indexOf(item);
+    if (index !== -1) {
+      itemsArr.splice(index, 1);
+      setItemsList(itemsArr);
+    }
+  };
+
   return (
     <ItemsListContext.Provider
       value={{
         setInitialList,
         itemsList,
         getItem,
+        useItem,
       }}
     >
       {props.children}

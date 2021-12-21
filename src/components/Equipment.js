@@ -14,7 +14,14 @@ function Equipment() {
       <h2 className="equipmentHeading">Your items</h2>
       <div className="itemsDiv">
         {itemsList.map((item) => {
-          return <img className="itemImg" src={item.img} alt={item.name} />;
+          return (
+            <img
+              className="itemImg"
+              src={item.img}
+              alt={item.name}
+              key={item.name}
+            />
+          );
         })}
       </div>
     </div>

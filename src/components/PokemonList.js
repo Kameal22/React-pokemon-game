@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "../styles/PokemonList.css";
 import { Link } from "react-router-dom";
 import { CurrentPokemonContext } from "../contexts/pokemonContexts/CurrentPokemonContext";
@@ -9,11 +9,22 @@ import { ItemsListContext } from "../contexts/itemContexts/ItemsListContext";
 function PokemonList() {
   const [start, setStart] = useState(false);
   const [userChoice, setUserChoice] = useState([]);
+  const [death, setDeath] = useState(false);
 
   const { currentPokemon, changePokemon } = useContext(CurrentPokemonContext);
   const { discoverPokemon } = useContext(OwnedPokemonContext);
   const { pokemonList } = useContext(PokemonListContext);
   const { itemsList, getItem } = useContext(ItemsListContext);
+
+  useEffect(() => {
+    checkPokemonHealth();
+  }, [currentPokemon]);
+
+  const checkPokemonHealth = () => {
+    if (currentPokemon.health <= 0) {
+      setDeath(true);
+    }
+  };
 
   const showStarterPokes = () => {
     const starterPokes = [];
@@ -115,7 +126,16 @@ function PokemonList() {
         </div>
         <div className="chosenPokemonMainView">
           <p>{currentPokemon.name}</p>
-          <img src={currentPokemon.img} alt={currentPokemon.name}></img>
+          <p style={{ color: "red" }}>
+            {death ? `${currentPokemon.health} Hp` : null}
+          </p>
+          <img
+            style={
+              death ? { filter: "brightness(0)" } : { filter: "brightness(1)" }
+            }
+            src={currentPokemon.img}
+            alt={currentPokemon.name}
+          ></img>
         </div>
         <p onClick={startOver} className="startOver">
           Start over

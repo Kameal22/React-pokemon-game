@@ -5,7 +5,8 @@ import { CharacterContext } from "../contexts/playerContexts/CharacterContexts";
 import { PokemonListContext } from "../contexts/pokemonContexts/PokemonListContext";
 import { CurrentPokemonContext } from "../contexts/pokemonContexts/CurrentPokemonContext";
 import {
-  checkElement,
+  checkAdvantage,
+  checkDisadvantage,
   enemyAtt,
   userAtt,
   usePotion,
@@ -27,8 +28,8 @@ function Fight() {
   const [enemyTurn, setEnemyTurn] = useState(false);
   const [userTurn, setUserTurn] = useState(false);
   const [advantage, setAdvantage] = useState(false);
+  const [disadvantage, setDisadvantage] = useState(false);
   const [userAttack, setUserAttack] = useState(false);
-  const [userAction, setUserAction] = useState("");
   const [pokeballThrow, setPokeballThrow] = useState(false);
   const [enemyCaught, setEnemyCaught] = useState(false);
   const [potionUsed, setPotionUse] = useState(false);
@@ -45,7 +46,13 @@ function Fight() {
   };
 
   useEffect(() => {
-    checkElement(currentPokemon.type, enemy.type, setAdvantage, advantage);
+    checkAdvantage(currentPokemon.type, enemy.type, setAdvantage, advantage);
+    checkDisadvantage(
+      enemy.type,
+      currentPokemon.type,
+      setDisadvantage,
+      disadvantage
+    );
     checkFightEnd();
   }, [enemy, currentPokemon, userMoving]);
 
@@ -217,17 +224,7 @@ function Fight() {
 
   const startTheFight = () => {
     setEncounterStart(true);
-    if (userAction === "") {
-      enemyAttack().then(startUsersTurn);
-    } else if (userAction === "basicAttack") {
-      userBasicAttackTurn();
-    } else if (userAction === "abilityAttack") {
-      userAbilityAttackTurn();
-    } else if (userAction === "pokeballUse") {
-      userPokeballUseTurn();
-    } else if (userAction === "potionUse") {
-      userPotionUseTurn();
-    }
+    enemyAttack().then(startUsersTurn);
   };
 
   const checkFightEnd = () => {
@@ -240,7 +237,6 @@ function Fight() {
   };
 
   const basicAttackFunc = () => {
-    setUserAction("basicAttack");
     userBasicAttackTurn()
       .then(stopTheFight)
       .then(nextRound)
@@ -249,7 +245,6 @@ function Fight() {
   };
 
   const abilityAttackFunc = () => {
-    setUserAction("abilityAttack");
     userAbilityAttackTurn()
       .then(nextRound)
       .then(enemyAttack)
@@ -257,7 +252,6 @@ function Fight() {
   };
 
   const pokeballUseFunc = () => {
-    setUserAction("pokeballUse");
     userPokeballUseTurn()
       .then(userCatchPokemonTurn)
       .then(nextRound)
@@ -266,7 +260,6 @@ function Fight() {
   };
 
   const potionUseFunc = () => {
-    setUserAction("potionUse");
     userPotionUseTurn()
       .then(healUserTurn)
       .then(nextRound)
@@ -277,8 +270,8 @@ function Fight() {
   const flee = () => {
     setFightStart(false);
     setAdvantage(false);
+    setDisadvantage(false);
     setEnemyCaught(false);
-    setUserAction("");
     setUserAttack(false);
     setUserMoving(false);
     setEncounterStart(false);
@@ -387,7 +380,12 @@ function Fight() {
                   src={currentPokemon.img}
                   alt={currentPokemon.name}
                 ></img>
-                <p style={advantage ? { color: "green" } : { color: "ivory" }}>
+                <p
+                  style={
+                    (advantage ? { color: "green" } : { color: "ivory" },
+                    disadvantage ? { color: "red" } : { color: "ivory" })
+                  }
+                >
                   Type: {currentPokemon.type}
                 </p>
                 <p style={enemyTurn ? { color: "red" } : { color: "ivory" }}>
@@ -407,16 +405,31 @@ function Fight() {
               alt={enemy.name}
             ></img>
             <div>
-              <p style={advantage ? { color: "red" } : { color: "ivory" }}>
+              <p
+                style={
+                  (advantage ? { color: "red" } : { color: "ivory" },
+                  disadvantage ? { color: "green" } : { color: "ivory" })
+                }
+              >
                 Type: {enemy.type}
               </p>
               <p style={userTurn ? { color: "red" } : { color: "ivory" }}>
                 Hp: {enemy.health}
               </p>
-              <p style={advantage ? { color: "red" } : { color: "ivory" }}>
+              <p
+                style={
+                  (advantage ? { color: "red" } : { color: "ivory" },
+                  disadvantage ? { color: "green" } : { color: "ivory" })
+                }
+              >
                 Att: {advantage ? enemy.attack / 2 : enemy.attack}
               </p>
-              <p style={advantage ? { color: "red" } : { color: "ivory" }}>
+              <p
+                style={
+                  (advantage ? { color: "red" } : { color: "ivory" },
+                  disadvantage ? { color: "green" } : { color: "ivory" })
+                }
+              >
                 Def: {advantage ? enemy.defense / 2 : enemy.defense}
               </p>
               <p>Ability: {enemy.ability}</p>
