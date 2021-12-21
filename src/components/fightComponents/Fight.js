@@ -1,9 +1,9 @@
-import "../styles/Fight.css";
+import "../../styles/Fight.css";
 import React, { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { CharacterContext } from "../contexts/playerContexts/CharacterContexts";
-import { PokemonListContext } from "../contexts/pokemonContexts/PokemonListContext";
-import { CurrentPokemonContext } from "../contexts/pokemonContexts/CurrentPokemonContext";
+import { CharacterContext } from "../../contexts/playerContexts/CharacterContexts";
+import { PokemonListContext } from "../../contexts/pokemonContexts/PokemonListContext";
+import { CurrentPokemonContext } from "../../contexts/pokemonContexts/CurrentPokemonContext";
 import {
   checkAdvantage,
   checkDisadvantage,
@@ -11,9 +11,9 @@ import {
   userAtt,
   usePotion,
   userSpecialAtt,
-} from "../utills/FightUtills";
-import { OwnedPokemonContext } from "../contexts/pokemonContexts/OwnedPokemonContext";
-import { ItemsListContext } from "../contexts/itemContexts/ItemsListContext";
+} from "../../utills/FightUtills";
+import { OwnedPokemonContext } from "../../contexts/pokemonContexts/OwnedPokemonContext";
+import { ItemsListContext } from "../../contexts/itemContexts/ItemsListContext";
 
 function Fight() {
   const { expUpFunc } = useContext(CharacterContext);
@@ -36,10 +36,6 @@ function Fight() {
   const [userMoving, setUserMoving] = useState(false);
   const [win, setWin] = useState(false);
   const [lost, setLoss] = useState(false);
-
-  // const levelUp = (level) => {
-  //   return levelUpFunc(level);
-  // };
 
   const expUp = (value) => {
     return expUpFunc(value);

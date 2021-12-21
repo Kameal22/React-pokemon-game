@@ -24,6 +24,7 @@ function Pokedex() {
                 }
                 src={pokemon.img}
                 alt={pokemon.name}
+                key={pokemon.name}
               ></img>
             );
           })}

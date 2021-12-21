@@ -6,7 +6,7 @@ import { OwnPokemon } from "./contexts/pokemonContexts/OwnedPokemonContext";
 import Pokedex from "./components/Pokedex.js";
 import Equipment from "./components/Equipment.js";
 import Character from "./components/Character.js";
-import Fight from "./components/Fight";
+import Fight from "./components/fightComponents/Fight";
 import { PokemonListModifier } from "./contexts/pokemonContexts/PokemonListContext";
 import FetchPokemon from "./utills/FetchPokemon";
 import FetchItems from "./utills/FetchItems";

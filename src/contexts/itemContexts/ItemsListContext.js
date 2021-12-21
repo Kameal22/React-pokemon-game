@@ -14,13 +14,9 @@ export function ItemsListModifier(props) {
     window.localStorage.setItem("ownedItems", JSON.stringify(item));
   };
 
-  const useItem = (item) => {
-    const itemsArr = [...itemsList];
-    const index = itemsArr.indexOf(item);
-    if (index !== -1) {
-      itemsArr.splice(index, 1);
-      setItemsList(itemsArr);
-    }
+  const removeItem = (usedItem) => {
+    let filteredArray = itemsList.filter((item) => item !== usedItem);
+    setItemsList(filteredArray);
   };
 
   return (
@@ -29,7 +25,7 @@ export function ItemsListModifier(props) {
         setInitialList,
         itemsList,
         getItem,
-        useItem,
+        removeItem,
       }}
     >
       {props.children}
