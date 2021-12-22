@@ -1,6 +1,6 @@
 import "../../styles/Fight.css";
 import React, { useContext, useState, useEffect } from "react";
-import EnemyStats from "./EnemyStats";
+import PokemonStats from "./PokemonStats";
 import { Link } from "react-router-dom";
 import { CharacterContext } from "../../contexts/playerContexts/CharacterContexts";
 import { PokemonListContext } from "../../contexts/pokemonContexts/PokemonListContext";
@@ -15,6 +15,7 @@ import {
 } from "../../utills/FightUtills";
 import { OwnedPokemonContext } from "../../contexts/pokemonContexts/OwnedPokemonContext";
 import { ItemsListContext } from "../../contexts/itemContexts/ItemsListContext";
+import PokemonImgs from "./PokemonImg";
 
 function Fight() {
   const { expUpFunc } = useContext(CharacterContext);
@@ -41,6 +42,10 @@ function Fight() {
   const expUp = (value) => {
     return expUpFunc(value);
   };
+
+  useEffect(() => {
+    showEnemy();
+  }, []);
 
   useEffect(() => {
     checkAdvantage(currentPokemon.type, enemy.type, setAdvantage, advantage);
@@ -275,177 +280,30 @@ function Fight() {
     setWin(false);
     setLoss(false);
   };
-
-  if (!fightStart) {
-    return (
-      <div className="fightDiv">
-        <div className="navLinksScd">
-          <Link to="/">Home</Link>
+  return (
+    <div className="fightDiv">
+      <h2 className="fightHeading">Fight</h2>
+      <div className="startedFightDiv">
+        <div className="userDiv">
+          <PokemonImgs img={currentPokemon.img} />
+          <PokemonStats stats={currentPokemon} />
         </div>
-        <h2 className="fightHeading">Fight</h2>
-        <div className="fightSelectingDiv">
-          <h4 onClick={startEncounter} style={{ cursor: "pointer" }}>
-            Encounter
-          </h4>
-          <EnemyStats />
+        <div className="enemyDiv">
+          <PokemonImgs img={enemy.img} />
+          <PokemonStats stats={enemy} />
         </div>
       </div>
-    );
-  } else if (win) {
-    return (
-      <div className="fightDiv">
-        <h1 style={{ color: "green" }}>You win!</h1>
-        <p style={{ color: "ivory" }}>+10 exp!</p>
-        <button className="fleeBtn" onClick={flee}>
-          Go back
-        </button>
-      </div>
-    );
-  } else if (lost) {
-    return (
-      <div className="fightDiv">
-        <h1 style={{ color: "red" }}>You lost</h1>
-        <button className="fleeBtn" onClick={flee}>
-          Go back
-        </button>
-      </div>
-    );
-  } else if (enemyCaught) {
-    return (
-      <div className="fightDiv">
-        <h1>You caught {enemy.name}</h1>
-        <button className="fleeBtn" onClick={flee}>
-          Go back
-        </button>
-      </div>
-    );
-  } else if (!enemyCaught) {
-    return (
-      <div className="fightDiv">
-        <h2 className="fightHeading">Fight</h2>
-        <div className="startedFightDiv">
-          <div className="user">
-            {userAttack ? (
-              <div>
-                {potionUsed ? (
-                  <p style={{ color: "green", fontWeight: "bold" }}>+25 Hp!</p>
-                ) : (
-                  <p className="pokeName">{currentPokemon.name}</p>
-                )}
-
-                <img
-                  style={userTurn ? { transform: "translate(300px, 0)" } : null}
-                  src={currentPokemon.img}
-                  alt={currentPokemon.name}
-                ></img>
-                <img
-                  style={
-                    potionUsed ? { transform: "translate(0, -20px" } : null
-                  }
-                  src={itemsList[1].img}
-                ></img>
-                <img
-                  style={
-                    pokeballThrow ? { transform: "translate(300px, 0)" } : null
-                  }
-                  src={itemsList[0].img}
-                ></img>
-                {userMoving ? null : (
-                  <div>
-                    <p className="userMove" onClick={basicAttackFunc}>
-                      Basic attack
-                    </p>
-                    <p className="userMove" onClick={abilityAttackFunc}>
-                      {currentPokemon.ability}
-                    </p>
-                    <p className="userMove" onClick={pokeballUseFunc}>
-                      Use pokeball
-                    </p>
-                    <p className="userMove" onClick={potionUseFunc}>
-                      Use potion
-                    </p>
-                    <p className="userMove" onClick={flee}>
-                      Flee
-                    </p>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div>
-                <p className="pokeName">{currentPokemon.name}</p>
-                <img
-                  style={userTurn ? { transform: "translate(300px, 0)" } : null}
-                  src={currentPokemon.img}
-                  alt={currentPokemon.name}
-                ></img>
-                <p
-                  style={
-                    (advantage ? { color: "green" } : { color: "ivory" },
-                    disadvantage ? { color: "red" } : { color: "ivory" })
-                  }
-                >
-                  Type: {currentPokemon.type}
-                </p>
-                <p style={enemyTurn ? { color: "red" } : { color: "ivory" }}>
-                  Hp: {currentPokemon.health}
-                </p>
-                <p>Att: {currentPokemon.attack}</p>
-                <p>Def: {currentPokemon.defense}</p>
-                <p>Ability: {currentPokemon.ability}</p>
-              </div>
-            )}
-          </div>
-          <div className="enemy">
-            <p className="pokeName">{enemy.name}</p>
-            <img
-              style={enemyTurn ? { transform: "translate(-300px, 0)" } : null}
-              src={enemy.img}
-              alt={enemy.name}
-            ></img>
-            <div>
-              <p
-                style={
-                  (advantage ? { color: "red" } : { color: "ivory" },
-                  disadvantage ? { color: "green" } : { color: "ivory" })
-                }
-              >
-                Type: {enemy.type}
-              </p>
-              <p style={userTurn ? { color: "red" } : { color: "ivory" }}>
-                Hp: {enemy.health}
-              </p>
-              <p
-                style={
-                  (advantage ? { color: "red" } : { color: "ivory" },
-                  disadvantage ? { color: "green" } : { color: "ivory" })
-                }
-              >
-                Att: {advantage ? enemy.attack / 2 : enemy.attack}
-              </p>
-              <p
-                style={
-                  (advantage ? { color: "red" } : { color: "ivory" },
-                  disadvantage ? { color: "green" } : { color: "ivory" })
-                }
-              >
-                Def: {advantage ? enemy.defense / 2 : enemy.defense}
-              </p>
-              <p>Ability: {enemy.ability}</p>
-            </div>
-          </div>
+      {encounterStart ? null : (
+        <div className="fightBtnsDiv">
+          <button className="startFightBtn" onClick={startTheFight}>
+            Fight
+          </button>
+          <button disabled={enemyTurn} className="fleeBtn" onClick={flee}>
+            Flee
+          </button>
         </div>
-        {encounterStart ? null : (
-          <div className="fightBtnsDiv">
-            <button className="startFightBtn" onClick={startTheFight}>
-              Fight
-            </button>
-            <button disabled={enemyTurn} className="fleeBtn" onClick={flee}>
-              Flee
-            </button>
-          </div>
-        )}
-      </div>
-    );
-  }
+      )}
+    </div>
+  );
 }
 export default Fight;

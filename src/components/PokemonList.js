@@ -121,7 +121,7 @@ function PokemonList() {
             <Link to="/Pokedex">Pokedex</Link>
             <Link to="/Equipment">Equipment</Link>
             <Link to="/Character">Character</Link>
-            <Link to="/Fight">Fight</Link>
+            <Link to="/FightPage">Fight</Link>
           </div>
         </div>
         <div className="chosenPokemonMainView">

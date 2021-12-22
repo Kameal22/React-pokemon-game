@@ -6,6 +6,7 @@ import { OwnPokemon } from "./contexts/pokemonContexts/OwnedPokemonContext";
 import Pokedex from "./components/Pokedex.js";
 import Equipment from "./components/Equipment.js";
 import Character from "./components/Character.js";
+import FightPage from "./components/fightComponents/FightPage.js";
 import Fight from "./components/fightComponents/Fight";
 import { PokemonListModifier } from "./contexts/pokemonContexts/PokemonListContext";
 import FetchPokemon from "./utills/FetchPokemon";
@@ -29,6 +30,7 @@ function App() {
                     <Route path="Pokedex" element={<Pokedex />} />
                     <Route path="Equipment" element={<Equipment />} />
                     <Route path="Character" element={<Character />} />
+                    <Route path="FightPage" element={<FightPage />} />
                     <Route path="Fight" element={<Fight />} />
                     <Route
                       path="*"

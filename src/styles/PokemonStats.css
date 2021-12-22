@@ -1,0 +1,7 @@
+.pokemonStatsDiv {
+  color: ivory;
+}
+
+.pokemonStatsDiv p {
+  cursor: pointer;
+}
