@@ -1,5 +1,4 @@
 import "../../styles/PokemonImgs.css";
-import React, { useContext } from "react";
 
 function PokemonImgs(props) {
   return (

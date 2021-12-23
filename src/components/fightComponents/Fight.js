@@ -29,7 +29,7 @@ function Fight() {
   const [encounterStart, setEncounterStart] = useState(false);
   const [enemyTurn, setEnemyTurn] = useState(false);
   const [userTurn, setUserTurn] = useState(false);
-  const [advantage, setAdvantage] = useState(false);
+  const [advantage, setAdvantage] = useState(null);
   const [disadvantage, setDisadvantage] = useState(false);
   const [userAttack, setUserAttack] = useState(false);
   const [pokeballThrow, setPokeballThrow] = useState(false);
@@ -270,15 +270,8 @@ function Fight() {
   };
 
   const flee = () => {
-    setFightStart(false);
+    showEnemy();
     setAdvantage(false);
-    setDisadvantage(false);
-    setEnemyCaught(false);
-    setUserAttack(false);
-    setUserMoving(false);
-    setEncounterStart(false);
-    setWin(false);
-    setLoss(false);
   };
   return (
     <div className="fightDiv">
@@ -286,7 +279,7 @@ function Fight() {
       <div className="startedFightDiv">
         <div className="userDiv">
           <PokemonImgs img={currentPokemon.img} />
-          <PokemonStats stats={currentPokemon} />
+          <PokemonStats stats={currentPokemon} advantage={advantage} />
         </div>
         <div className="enemyDiv">
           <PokemonImgs img={enemy.img} />

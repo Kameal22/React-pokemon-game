@@ -1,10 +1,7 @@
 import "../../styles/FightPage.css";
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 function Fight() {
-  //Show enemy here, or create a fight context
-
   return (
     <div className="fightDiv">
       <div className="navLinksScd">
