@@ -1,13 +1,11 @@
 import "../../styles/Fight.css";
 import React, { useContext, useState, useEffect } from "react";
 import PokemonStats from "./PokemonStats";
-import { Link } from "react-router-dom";
 import { CharacterContext } from "../../contexts/playerContexts/CharacterContexts";
 import { PokemonListContext } from "../../contexts/pokemonContexts/PokemonListContext";
 import { CurrentPokemonContext } from "../../contexts/pokemonContexts/CurrentPokemonContext";
 import {
   checkAdvantage,
-  checkDisadvantage,
   enemyAtt,
   userAtt,
   usePotion,
@@ -27,10 +25,9 @@ function Fight() {
   const [enemy, setEnemy] = useState({});
   const [fightStart, setFightStart] = useState(false);
   const [encounterStart, setEncounterStart] = useState(false);
-  const [enemyTurn, setEnemyTurn] = useState(false);
+  const [enemyAttacking, setEnemyAttacking] = useState(false);
   const [userTurn, setUserTurn] = useState(false);
   const [advantage, setAdvantage] = useState(null);
-  const [disadvantage, setDisadvantage] = useState(false);
   const [userAttack, setUserAttack] = useState(false);
   const [pokeballThrow, setPokeballThrow] = useState(false);
   const [enemyCaught, setEnemyCaught] = useState(false);
@@ -49,14 +46,8 @@ function Fight() {
 
   useEffect(() => {
     checkAdvantage(currentPokemon.type, enemy.type, setAdvantage, advantage);
-    checkDisadvantage(
-      enemy.type,
-      currentPokemon.type,
-      setDisadvantage,
-      disadvantage
-    );
     checkFightEnd();
-  }, [enemy, currentPokemon, userMoving]);
+  }, [enemy, currentPokemon]);
 
   const discoverNewPokemon = (pokemon) => {
     return discoverPokemon(pokemon);
@@ -96,10 +87,18 @@ function Fight() {
     setEnemy(enemy);
   };
 
-  const enemyAttack = () => {
+  const enemyAttackTurn = () => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        setEnemyTurn(true);
+        setEnemyAttacking(true);
+        resolve();
+      }, 1000);
+    });
+  };
+
+  const absorbEnemyAttackTurn = () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
         absorbEnemyAttack(currentPokemon, Math.round(userHpAfterAtt));
         resolve();
       }, 1000);
@@ -109,7 +108,6 @@ function Fight() {
   const startUsersTurn = () => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        setEnemyTurn(false);
         setUserAttack(true);
         resolve();
       }, 1000);
@@ -127,18 +125,6 @@ function Fight() {
         }));
         resolve();
       }, 1000);
-    });
-  };
-
-  const stopTheFight = () => {
-    return new Promise((resolve, reject) => {
-      if (win) {
-        reject();
-      } else {
-        setEnemyTurn(false);
-        setUserAttack(true);
-        resolve();
-      }
     });
   };
 
@@ -215,18 +201,9 @@ function Fight() {
     });
   };
 
-  const startEncounter = () => {
-    if (currentPokemon.health > 0) {
-      setFightStart(true);
-      showEnemy();
-    } else {
-      alert("Heal your Pokemon");
-    }
-  };
-
   const startTheFight = () => {
     setEncounterStart(true);
-    enemyAttack().then(startUsersTurn);
+    enemyAttackTurn();
   };
 
   const checkFightEnd = () => {
@@ -240,16 +217,15 @@ function Fight() {
 
   const basicAttackFunc = () => {
     userBasicAttackTurn()
-      .then(stopTheFight)
       .then(nextRound)
-      .then(enemyAttack)
+      .then(enemyAttackTurn)
       .then(startUsersTurn);
   };
 
   const abilityAttackFunc = () => {
     userAbilityAttackTurn()
       .then(nextRound)
-      .then(enemyAttack)
+      .then(enemyAttackTurn)
       .then(startUsersTurn);
   };
 
@@ -257,7 +233,7 @@ function Fight() {
     userPokeballUseTurn()
       .then(userCatchPokemonTurn)
       .then(nextRound)
-      .then(enemyAttack)
+      .then(enemyAttackTurn)
       .then(startUsersTurn);
   };
 
@@ -265,14 +241,15 @@ function Fight() {
     userPotionUseTurn()
       .then(healUserTurn)
       .then(nextRound)
-      .then(enemyAttack)
+      .then(enemyAttackTurn)
       .then(startUsersTurn);
   };
 
   const flee = () => {
     showEnemy();
-    setAdvantage(false);
+    setAdvantage(null);
   };
+
   return (
     <div className="fightDiv">
       <h2 className="fightHeading">Fight</h2>
@@ -283,7 +260,10 @@ function Fight() {
         </div>
         <div className="enemyDiv">
           <PokemonImgs img={enemy.img} />
-          <PokemonStats stats={enemy} />
+          <PokemonStats
+            stats={enemy}
+            advantage={advantage !== null ? !advantage : null}
+          />
         </div>
       </div>
       {encounterStart ? null : (
@@ -291,7 +271,7 @@ function Fight() {
           <button className="startFightBtn" onClick={startTheFight}>
             Fight
           </button>
-          <button disabled={enemyTurn} className="fleeBtn" onClick={flee}>
+          <button className="fleeBtn" onClick={flee}>
             Flee
           </button>
         </div>

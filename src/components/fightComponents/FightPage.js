@@ -10,7 +10,9 @@ function Fight() {
       <h2 className="fightHeading">Fight</h2>
       <div className="fightSelectingDiv">
         <h4 className="startEncounter">
-          <Link to="/Fight">Start encounter</Link>
+          <Link className="startEncounter" to="/Fight">
+            Start encounter
+          </Link>
         </h4>
       </div>
     </div>

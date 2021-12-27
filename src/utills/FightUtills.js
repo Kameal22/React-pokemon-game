@@ -26,34 +26,6 @@ const checkAdvantage = (userElement, enemyElement, setAdv) => {
   }
 };
 
-const checkDisadvantage = (enemyElement, userElement, setDisadv) => {
-  if (enemyElement === "water" && userElement === "fire") {
-    setDisadv(true);
-  } else if (enemyElement === "fire" && userElement === "grass") {
-    setDisadv(true);
-  } else if (enemyElement === "grass" && userElement === "water") {
-    setDisadv(true);
-  } else if (enemyElement === "bug" && userElement === "grass") {
-    setDisadv(true);
-  } else if (enemyElement === "poison" && userElement === "grass") {
-    setDisadv(true);
-  } else if (enemyElement === "electric" && userElement === "water") {
-    setDisadv(true);
-  } else if (enemyElement === "ground" && userElement === "fire") {
-    setDisadv(true);
-  } else if (enemyElement === "fairy" && userElement === "fighting") {
-    setDisadv(true);
-  } else if (enemyElement === "psychic" && userElement === "poison") {
-    setDisadv(true);
-  } else if (enemyElement === "fighting" && userElement === "normal") {
-    setDisadv(true);
-  } else if (enemyElement === "rock" && userElement === "bug") {
-    setDisadv(true);
-  } else if (enemyElement === "ghost" && userElement === "psychic") {
-    setDisadv(true);
-  }
-};
-
 const enemyAtt = (enemyAtt, userDef, userHp) => {
   let hpAfterAttack = 0;
   let loweredDefense = userDef * 0.85;
@@ -95,11 +67,4 @@ const usePotion = (userHp, potionHeal) => {
   return hpAfterHealing;
 };
 
-export {
-  checkAdvantage,
-  checkDisadvantage,
-  enemyAtt,
-  userAtt,
-  usePotion,
-  userSpecialAtt,
-};
+export { checkAdvantage, enemyAtt, userAtt, usePotion, userSpecialAtt };
