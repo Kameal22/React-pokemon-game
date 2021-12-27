@@ -28,7 +28,7 @@ function Fight() {
   const [enemyAttacking, setEnemyAttacking] = useState(false);
   const [userTurn, setUserTurn] = useState(false);
   const [advantage, setAdvantage] = useState(null);
-  const [userAttack, setUserAttack] = useState(false);
+  const [userAttacking, setUserAttacking] = useState(false);
   const [pokeballThrow, setPokeballThrow] = useState(false);
   const [enemyCaught, setEnemyCaught] = useState(false);
   const [potionUsed, setPotionUse] = useState(false);
@@ -108,7 +108,7 @@ function Fight() {
   const startUsersTurn = () => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        setUserAttack(true);
+        setUserAttacking(true);
         resolve();
       }, 1000);
     });
@@ -194,7 +194,7 @@ function Fight() {
     return new Promise((resolve) => {
       setTimeout(() => {
         setUserTurn(false);
-        setUserAttack(false);
+        setUserAttacking(false);
         setUserMoving(false);
         resolve();
       }, 1000);
@@ -255,11 +255,11 @@ function Fight() {
       <h2 className="fightHeading">Fight</h2>
       <div className="startedFightDiv">
         <div className="userDiv">
-          <PokemonImgs img={currentPokemon.img} />
+          <PokemonImgs img={currentPokemon.img} userAttack={userAttacking} />
           <PokemonStats stats={currentPokemon} advantage={advantage} />
         </div>
         <div className="enemyDiv">
-          <PokemonImgs img={enemy.img} />
+          <PokemonImgs img={enemy.img} enemyAttack={enemyAttacking} />
           <PokemonStats
             stats={enemy}
             advantage={advantage !== null ? !advantage : null}
