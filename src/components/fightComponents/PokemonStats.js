@@ -13,6 +13,18 @@ function PokemonStats(props) {
     }
   }
 
+  let attackingStyle = {
+    color: "ivory",
+  };
+
+  if (props.userAttack) {
+    attackingStyle.color = "red";
+  } else if (props.enemyAttack) {
+    attackingStyle.color = "red";
+  } else {
+    attackingStyle.color = "ivory";
+  }
+
   const basicAttack = () => {
     props.basicAttack();
   };
@@ -31,7 +43,7 @@ function PokemonStats(props) {
       <div className="pokemonStatsDiv">
         <p>{props.stats.name}</p>
         <p style={advantageStyle}>{props.stats.type}</p>
-        <p>{props.stats.health} Hp</p>
+        <p style={attackingStyle}>{props.stats.health} Hp</p>
         <p>{props.stats.defense} Def</p>
         <p>{props.stats.attack} Att</p>
         <p>Ability: {props.stats.ability}</p>

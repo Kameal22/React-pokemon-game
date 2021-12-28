@@ -23,7 +23,6 @@ function Fight() {
   const { itemsList } = useContext(ItemsListContext);
 
   const [enemy, setEnemy] = useState({});
-  const [fightStart, setFightStart] = useState(false);
   const [encounterStart, setEncounterStart] = useState(false);
   const [enemyAttacking, setEnemyAttacking] = useState(false);
   const [userTurn, setUserTurn] = useState(false);
@@ -36,6 +35,8 @@ function Fight() {
   const [win, setWin] = useState(false);
   const [lost, setLoss] = useState(false);
 
+  const [testRepeat, setTestRepeat] = useState(false);
+
   const expUp = (value) => {
     return expUpFunc(value);
   };
@@ -46,8 +47,12 @@ function Fight() {
 
   useEffect(() => {
     checkAdvantage(currentPokemon.type, enemy.type, setAdvantage, advantage);
-    checkFightEnd();
+    // checkFightEnd();
   }, [enemy, currentPokemon]);
+
+  useEffect(() => {
+    testReapeatingFunc();
+  }, [testRepeat]);
 
   const discoverNewPokemon = (pokemon) => {
     return discoverPokemon(pokemon);
@@ -108,19 +113,40 @@ function Fight() {
 
   const startUsersTurn = () => {
     return new Promise((resolve) => {
-      setUserMoving(true);
-      resolve();
+      setTimeout(() => {
+        setUserMoving(true);
+        resolve();
+      }, 1000);
     });
   };
 
   const userBasicAttackTurn = () => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        setUserMoving(true);
+        setUserAttacking(true);
+        resolve();
+      }, 1000);
+    });
+  };
+
+  const absorbUserAttackTurn = () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        setUserAttacking(false);
         setEnemy((prevStats) => ({
           ...prevStats,
           health: Math.round(enemyHpAfterAtt),
         }));
+        resolve();
+      }, 1000);
+    });
+  };
+
+  const nextRound = () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        setUserMoving(false);
+        setTestRepeat(!testRepeat);
         resolve();
       }, 1000);
     });
@@ -193,12 +219,9 @@ function Fight() {
     enemyTurnFunc();
   };
 
-  const checkFightEnd = () => {
-    if (currentPokemon.health <= 0) {
-      setLoss(true);
-    } else if (enemy.health <= 0) {
-      setWin(true);
-      expUp(10);
+  const testReapeatingFunc = () => {
+    if (enemy.health < 0) {
+      console.log("in useEffect!");
     }
   };
 
@@ -207,7 +230,7 @@ function Fight() {
   };
 
   const basicAttackFunc = () => {
-    userBasicAttackTurn().then(enemyAttackTurn).then(startUsersTurn);
+    userBasicAttackTurn().then(absorbUserAttackTurn).then(nextRound);
   };
 
   const abilityAttackFunc = () => {
@@ -232,7 +255,7 @@ function Fight() {
     showEnemy();
     setAdvantage(null);
     setEnemyAttacking(false);
-    setUserAttacking(false);
+    setUserMoving(false);
   };
 
   return (
@@ -245,6 +268,7 @@ function Fight() {
             stats={currentPokemon}
             advantage={advantage}
             userTurn={userMoving}
+            enemyAttack={enemyAttacking}
             basicAttack={basicAttackFunc}
           />
         </div>
@@ -253,6 +277,7 @@ function Fight() {
           <PokemonStats
             stats={enemy}
             advantage={advantage !== null ? !advantage : null}
+            userAttack={userAttacking}
           />
         </div>
       </div>
