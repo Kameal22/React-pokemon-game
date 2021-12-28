@@ -100,6 +100,7 @@ function Fight() {
     return new Promise((resolve) => {
       setTimeout(() => {
         absorbEnemyAttack(currentPokemon, Math.round(userHpAfterAtt));
+        setEnemyAttacking(false);
         resolve();
       }, 1000);
     });
@@ -107,17 +108,14 @@ function Fight() {
 
   const startUsersTurn = () => {
     return new Promise((resolve) => {
-      setTimeout(() => {
-        setUserAttacking(true);
-        resolve();
-      }, 1000);
+      setUserMoving(true);
+      resolve();
     });
   };
 
   const userBasicAttackTurn = () => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        setUserTurn(true);
         setUserMoving(true);
         setEnemy((prevStats) => ({
           ...prevStats,
@@ -190,20 +188,9 @@ function Fight() {
     });
   };
 
-  const nextRound = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        setUserTurn(false);
-        setUserAttacking(false);
-        setUserMoving(false);
-        resolve();
-      }, 1000);
-    });
-  };
-
   const startTheFight = () => {
     setEncounterStart(true);
-    enemyAttackTurn();
+    enemyTurnFunc();
   };
 
   const checkFightEnd = () => {
@@ -215,24 +202,21 @@ function Fight() {
     }
   };
 
+  const enemyTurnFunc = () => {
+    enemyAttackTurn().then(absorbEnemyAttackTurn).then(startUsersTurn);
+  };
+
   const basicAttackFunc = () => {
-    userBasicAttackTurn()
-      .then(nextRound)
-      .then(enemyAttackTurn)
-      .then(startUsersTurn);
+    userBasicAttackTurn().then(enemyAttackTurn).then(startUsersTurn);
   };
 
   const abilityAttackFunc = () => {
-    userAbilityAttackTurn()
-      .then(nextRound)
-      .then(enemyAttackTurn)
-      .then(startUsersTurn);
+    userAbilityAttackTurn().then(enemyAttackTurn).then(startUsersTurn);
   };
 
   const pokeballUseFunc = () => {
     userPokeballUseTurn()
       .then(userCatchPokemonTurn)
-      .then(nextRound)
       .then(enemyAttackTurn)
       .then(startUsersTurn);
   };
@@ -240,7 +224,6 @@ function Fight() {
   const potionUseFunc = () => {
     userPotionUseTurn()
       .then(healUserTurn)
-      .then(nextRound)
       .then(enemyAttackTurn)
       .then(startUsersTurn);
   };
@@ -248,6 +231,8 @@ function Fight() {
   const flee = () => {
     showEnemy();
     setAdvantage(null);
+    setEnemyAttacking(false);
+    setUserAttacking(false);
   };
 
   return (
@@ -256,7 +241,12 @@ function Fight() {
       <div className="startedFightDiv">
         <div className="userDiv">
           <PokemonImgs img={currentPokemon.img} userAttack={userAttacking} />
-          <PokemonStats stats={currentPokemon} advantage={advantage} />
+          <PokemonStats
+            stats={currentPokemon}
+            advantage={advantage}
+            userTurn={userMoving}
+            basicAttack={basicAttackFunc}
+          />
         </div>
         <div className="enemyDiv">
           <PokemonImgs img={enemy.img} enemyAttack={enemyAttacking} />
@@ -266,16 +256,14 @@ function Fight() {
           />
         </div>
       </div>
-      {encounterStart ? null : (
-        <div className="fightBtnsDiv">
-          <button className="startFightBtn" onClick={startTheFight}>
-            Fight
-          </button>
-          <button className="fleeBtn" onClick={flee}>
-            Flee
-          </button>
-        </div>
-      )}
+      <div className="fightBtnsDiv">
+        <button className="startFightBtn" onClick={startTheFight}>
+          Fight
+        </button>
+        <button className="fleeBtn" onClick={flee}>
+          Flee
+        </button>
+      </div>
     </div>
   );
 }
