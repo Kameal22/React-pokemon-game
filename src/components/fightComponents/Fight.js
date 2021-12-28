@@ -220,8 +220,8 @@ function Fight() {
   };
 
   const testReapeatingFunc = () => {
-    if (enemy.health < 0) {
-      console.log("in useEffect!");
+    if (enemy.health > 0) {
+      enemyTurnFunc();
     }
   };
 
