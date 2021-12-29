@@ -5,6 +5,14 @@ function PokemonStats(props) {
     color: "ivory",
   };
 
+  let advantageDefense = props.stats.defense;
+
+  if (props.advantage !== undefined && props.advantage !== null) {
+    if (!props.advantage) {
+      advantageDefense = advantageDefense - 25;
+    }
+  }
+
   if (props.advantage !== undefined && props.advantage !== null) {
     if (props.advantage) {
       advantageStyle.color = "green";
@@ -29,26 +37,42 @@ function PokemonStats(props) {
     props.basicAttack();
   };
 
-  if (props.userTurn) {
-    return (
-      <div className="pokemonStatsDiv">
-        <p onClick={basicAttack}>Normal attack</p>
-        <p>{props.stats.ability}</p>
-        <p>Use potion</p>
-        <p>Use pokeball</p>
-      </div>
-    );
+  const abilityAttack = () => {
+    props.abilityAttack();
+  };
+
+  const potionUse = () => {
+    props.potionUse();
+  };
+
+  const pokeballUse = () => {
+    props.pokeballUse();
+  };
+
+  if (!props.win) {
+    if (props.userTurn) {
+      return (
+        <div className="pokemonStatsDiv">
+          <p onClick={basicAttack}>Normal attack</p>
+          <p onClick={abilityAttack}>{props.stats.ability}</p>
+          <p onClick={potionUse}>Use potion</p>
+          <p onClick={pokeballUse}>Use pokeball</p>
+        </div>
+      );
+    } else {
+      return (
+        <div className="pokemonStatsDiv">
+          <p>{props.stats.name}</p>
+          <p style={advantageStyle}>{props.stats.type}</p>
+          <p style={attackingStyle}>{props.stats.health} Hp</p>
+          <p style={advantageStyle}>{advantageDefense} Def</p>
+          <p>{props.stats.attack} Att</p>
+          <p>Ability: {props.stats.ability}</p>
+        </div>
+      );
+    }
   } else {
-    return (
-      <div className="pokemonStatsDiv">
-        <p>{props.stats.name}</p>
-        <p style={advantageStyle}>{props.stats.type}</p>
-        <p style={attackingStyle}>{props.stats.health} Hp</p>
-        <p>{props.stats.defense} Def</p>
-        <p>{props.stats.attack} Att</p>
-        <p>Ability: {props.stats.ability}</p>
-      </div>
-    );
+    return null;
   }
 }
 export default PokemonStats;

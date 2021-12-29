@@ -13,10 +13,18 @@ function PokemonImgs(props) {
     attackingStyle.transform = null;
   }
 
-  return (
-    <div className="pokemonImgDiv">
-      <img style={attackingStyle} src={props.img}></img>
-    </div>
-  );
+  if (!props.win) {
+    return (
+      <div className="pokemonImgDiv">
+        <img style={attackingStyle} src={props.img}></img>
+      </div>
+    );
+  } else {
+    return (
+      <div className="pokemonImgDiv">
+        <h2 style={{ color: "green" }}>You win!</h2>
+      </div>
+    );
+  }
 }
 export default PokemonImgs;

@@ -25,17 +25,16 @@ function Fight() {
   const [enemy, setEnemy] = useState({});
   const [encounterStart, setEncounterStart] = useState(false);
   const [enemyAttacking, setEnemyAttacking] = useState(false);
-  const [userTurn, setUserTurn] = useState(false);
   const [advantage, setAdvantage] = useState(null);
   const [userAttacking, setUserAttacking] = useState(false);
   const [pokeballThrow, setPokeballThrow] = useState(false);
   const [enemyCaught, setEnemyCaught] = useState(false);
-  const [potionUsed, setPotionUse] = useState(false);
+  const [potionUse, setPotionUse] = useState(false);
   const [userMoving, setUserMoving] = useState(false);
-  const [win, setWin] = useState(false);
-  const [lost, setLoss] = useState(false);
+  const [fightWin, setFightWin] = useState(false);
 
-  const [testRepeat, setTestRepeat] = useState(false);
+  const [fightHelperState, setFightHelperState] = useState(false);
+  const [scdFightHelperState, setScdFightHelperState] = useState(false);
 
   const expUp = (value) => {
     return expUpFunc(value);
@@ -47,12 +46,15 @@ function Fight() {
 
   useEffect(() => {
     checkAdvantage(currentPokemon.type, enemy.type, setAdvantage, advantage);
-    // checkFightEnd();
   }, [enemy, currentPokemon]);
 
   useEffect(() => {
-    testReapeatingFunc();
-  }, [testRepeat]);
+    checkEnemyDeath();
+  }, [fightHelperState]);
+
+  useEffect(() => {
+    checkUserDeath();
+  }, [scdFightHelperState]);
 
   const discoverNewPokemon = (pokemon) => {
     return discoverPokemon(pokemon);
@@ -106,6 +108,7 @@ function Fight() {
       setTimeout(() => {
         absorbEnemyAttack(currentPokemon, Math.round(userHpAfterAtt));
         setEnemyAttacking(false);
+        setScdFightHelperState(!scdFightHelperState);
         resolve();
       }, 1000);
     });
@@ -146,7 +149,7 @@ function Fight() {
     return new Promise((resolve) => {
       setTimeout(() => {
         setUserMoving(false);
-        setTestRepeat(!testRepeat);
+        setFightHelperState(!fightHelperState);
         resolve();
       }, 1000);
     });
@@ -155,8 +158,20 @@ function Fight() {
   const userAbilityAttackTurn = () => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        setUserTurn(true);
-        setUserMoving(true);
+        setUserAttacking(true);
+        setEnemy((prevStats) => ({
+          ...prevStats,
+          health: Math.round(enemyHpAfterAbility),
+        }));
+        resolve();
+      }, 1000);
+    });
+  };
+
+  const absorbUserAbilityTurn = () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        setUserAttacking(false);
         setEnemy((prevStats) => ({
           ...prevStats,
           health: Math.round(enemyHpAfterAbility),
@@ -170,7 +185,6 @@ function Fight() {
     return new Promise((resolve) => {
       setTimeout(() => {
         setPokeballThrow(true);
-        setUserMoving(true);
         resolve();
       }, 1000);
     });
@@ -181,7 +195,7 @@ function Fight() {
       if (Math.random() < 0.4) {
         setTimeout(() => {
           discoverNewPokemon(enemy);
-          setEnemyCaught(true);
+          // setEnemyCaught(true);
           setPokeballThrow(false);
         }, 1000);
       } else {
@@ -197,7 +211,6 @@ function Fight() {
     return new Promise((resolve) => {
       setTimeout(() => {
         setPotionUse(true);
-        setUserMoving(true);
         resolve();
       }, 1000);
     });
@@ -208,7 +221,6 @@ function Fight() {
       setTimeout(() => {
         potionHeal(currentPokemon, userHpAfterHealing);
         setPotionUse(false);
-        setUserMoving(true);
         resolve();
       }, 1000);
     });
@@ -219,9 +231,18 @@ function Fight() {
     enemyTurnFunc();
   };
 
-  const testReapeatingFunc = () => {
+  const checkUserDeath = () => {
+    if (currentPokemon.health < 0) {
+      console.log("You died!");
+    }
+  };
+
+  const checkEnemyDeath = () => {
     if (enemy.health > 0) {
       enemyTurnFunc();
+    } else {
+      setFightWin(true);
+      expUp(10);
     }
   };
 
@@ -234,21 +255,15 @@ function Fight() {
   };
 
   const abilityAttackFunc = () => {
-    userAbilityAttackTurn().then(enemyAttackTurn).then(startUsersTurn);
+    userAbilityAttackTurn().then(absorbUserAbilityTurn).then(nextRound);
   };
 
   const pokeballUseFunc = () => {
-    userPokeballUseTurn()
-      .then(userCatchPokemonTurn)
-      .then(enemyAttackTurn)
-      .then(startUsersTurn);
+    userPokeballUseTurn().then(userCatchPokemonTurn).then(nextRound);
   };
 
   const potionUseFunc = () => {
-    userPotionUseTurn()
-      .then(healUserTurn)
-      .then(enemyAttackTurn)
-      .then(startUsersTurn);
+    userPotionUseTurn().then(healUserTurn).then(nextRound);
   };
 
   const flee = () => {
@@ -256,6 +271,7 @@ function Fight() {
     setAdvantage(null);
     setEnemyAttacking(false);
     setUserMoving(false);
+    setFightWin(false);
   };
 
   return (
@@ -264,20 +280,45 @@ function Fight() {
       <div className="startedFightDiv">
         <div className="userDiv">
           <PokemonImgs img={currentPokemon.img} userAttack={userAttacking} />
+          <img
+            style={pokeballThrow ? { transform: "translateX(300px)" } : null}
+            src={itemsList[0].img}
+          ></img>
+          <img
+            style={potionUse ? { transform: "translateY(-10px)" } : null}
+            src={itemsList[1].img}
+          ></img>
+          <p
+            style={
+              potionUse
+                ? { display: "block", color: "green" }
+                : { display: "none" }
+            }
+          >
+            + 25 hp!
+          </p>
           <PokemonStats
             stats={currentPokemon}
             advantage={advantage}
             userTurn={userMoving}
             enemyAttack={enemyAttacking}
             basicAttack={basicAttackFunc}
+            abilityAttack={abilityAttackFunc}
+            potionUse={potionUseFunc}
+            pokeballUse={pokeballUseFunc}
           />
         </div>
         <div className="enemyDiv">
-          <PokemonImgs img={enemy.img} enemyAttack={enemyAttacking} />
+          <PokemonImgs
+            img={enemy.img}
+            enemyAttack={enemyAttacking}
+            win={fightWin}
+          />
           <PokemonStats
             stats={enemy}
             advantage={advantage !== null ? !advantage : null}
             userAttack={userAttacking}
+            win={fightWin}
           />
         </div>
       </div>
