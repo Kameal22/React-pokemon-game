@@ -13,16 +13,28 @@ function PokemonImgs(props) {
     attackingStyle.transform = null;
   }
 
-  if (!props.win) {
+  if (!props.win && !props.lost && !props.caught) {
     return (
       <div className="pokemonImgDiv">
         <img style={attackingStyle} src={props.img}></img>
       </div>
     );
-  } else {
+  } else if (props.win) {
     return (
       <div className="pokemonImgDiv">
         <h2 style={{ color: "green" }}>You win!</h2>
+      </div>
+    );
+  } else if (props.lost) {
+    return (
+      <div className="pokemonImgDiv">
+        <h2 style={{ color: "red" }}>You died</h2>
+      </div>
+    );
+  } else if (props.caught) {
+    return (
+      <div className="pokemonImgDiv">
+        <h2 style={{ color: "green" }}>You got it!</h2>
       </div>
     );
   }

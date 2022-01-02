@@ -49,7 +49,11 @@ function PokemonStats(props) {
     props.pokeballUse();
   };
 
-  if (!props.win) {
+  const testFlee = () => {
+    props.flee();
+  };
+
+  if (!props.win && !props.lost && !props.caught) {
     if (props.userTurn) {
       return (
         <div className="pokemonStatsDiv">
@@ -57,6 +61,7 @@ function PokemonStats(props) {
           <p onClick={abilityAttack}>{props.stats.ability}</p>
           <p onClick={potionUse}>Use potion</p>
           <p onClick={pokeballUse}>Use pokeball</p>
+          <p onClick={testFlee}>Flee</p>
         </div>
       );
     } else {

@@ -1,5 +1,6 @@
 import "../../styles/Fight.css";
 import React, { useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import PokemonStats from "./PokemonStats";
 import { CharacterContext } from "../../contexts/playerContexts/CharacterContexts";
 import { PokemonListContext } from "../../contexts/pokemonContexts/PokemonListContext";
@@ -32,9 +33,12 @@ function Fight() {
   const [potionUse, setPotionUse] = useState(false);
   const [userMoving, setUserMoving] = useState(false);
   const [fightWin, setFightWin] = useState(false);
+  const [fightloss, setFightLoss] = useState(false);
 
   const [fightHelperState, setFightHelperState] = useState(false);
   const [scdFightHelperState, setScdFightHelperState] = useState(false);
+
+  const navigate = useNavigate();
 
   const expUp = (value) => {
     return expUpFunc(value);
@@ -125,6 +129,7 @@ function Fight() {
 
   const userBasicAttackTurn = () => {
     return new Promise((resolve) => {
+      setUserMoving(false);
       setTimeout(() => {
         setUserAttacking(true);
         resolve();
@@ -148,7 +153,6 @@ function Fight() {
   const nextRound = () => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        setUserMoving(false);
         setFightHelperState(!fightHelperState);
         resolve();
       }, 1000);
@@ -157,6 +161,7 @@ function Fight() {
 
   const userAbilityAttackTurn = () => {
     return new Promise((resolve) => {
+      setUserMoving(false);
       setTimeout(() => {
         setUserAttacking(true);
         setEnemy((prevStats) => ({
@@ -182,6 +187,7 @@ function Fight() {
   };
 
   const userPokeballUseTurn = () => {
+    setUserMoving(false);
     return new Promise((resolve) => {
       setTimeout(() => {
         setPokeballThrow(true);
@@ -192,11 +198,14 @@ function Fight() {
 
   const userCatchPokemonTurn = () => {
     return new Promise((resolve) => {
-      if (Math.random() < 0.4) {
+      if (Math.random() < 0.5) {
         setTimeout(() => {
           discoverNewPokemon(enemy);
-          // setEnemyCaught(true);
+          setEnemyCaught(true);
           setPokeballThrow(false);
+          setTimeout(() => {
+            navigate(`/FightPage`, { replace: true });
+          }, 1500);
         }, 1000);
       } else {
         setTimeout(() => {
@@ -208,6 +217,7 @@ function Fight() {
   };
 
   const userPotionUseTurn = () => {
+    setUserMoving(false);
     return new Promise((resolve) => {
       setTimeout(() => {
         setPotionUse(true);
@@ -233,16 +243,22 @@ function Fight() {
 
   const checkUserDeath = () => {
     if (currentPokemon.health < 0) {
-      console.log("You died!");
+      setFightLoss(true);
+      setTimeout(() => {
+        navigate(`/FightPage`, { replace: true });
+      }, 1500);
     }
   };
 
   const checkEnemyDeath = () => {
     if (enemy.health > 0) {
       enemyTurnFunc();
-    } else {
+    } else if (enemy.health <= 0) {
       setFightWin(true);
       expUp(10);
+      setTimeout(() => {
+        navigate(`/FightPage`, { replace: true });
+      }, 1500);
     }
   };
 
@@ -267,11 +283,7 @@ function Fight() {
   };
 
   const flee = () => {
-    showEnemy();
-    setAdvantage(null);
-    setEnemyAttacking(false);
-    setUserMoving(false);
-    setFightWin(false);
+    navigate(`/FightPage`, { replace: true });
   };
 
   return (
@@ -279,24 +291,27 @@ function Fight() {
       <h2 className="fightHeading">Fight</h2>
       <div className="startedFightDiv">
         <div className="userDiv">
-          <PokemonImgs img={currentPokemon.img} userAttack={userAttacking} />
-          <img
-            style={pokeballThrow ? { transform: "translateX(300px)" } : null}
-            src={itemsList[0].img}
-          ></img>
-          <img
-            style={potionUse ? { transform: "translateY(-10px)" } : null}
-            src={itemsList[1].img}
-          ></img>
-          <p
-            style={
-              potionUse
-                ? { display: "block", color: "green" }
-                : { display: "none" }
-            }
-          >
-            + 25 hp!
-          </p>
+          <PokemonImgs
+            img={currentPokemon.img}
+            userAttack={userAttacking}
+            lost={fightloss}
+          />
+          <div style={fightloss ? { display: "none" } : { display: "flex" }}>
+            <img
+              style={pokeballThrow ? { transform: "translateX(300px)" } : null}
+              src={itemsList[0].img}
+            ></img>
+            <img src={itemsList[1].img}></img>
+            <p
+              style={
+                potionUse
+                  ? { display: "block", color: "green", fontSize: "0.5em" }
+                  : { display: "none" }
+              }
+            >
+              + 25 hp!
+            </p>
+          </div>
           <PokemonStats
             stats={currentPokemon}
             advantage={advantage}
@@ -306,6 +321,8 @@ function Fight() {
             abilityAttack={abilityAttackFunc}
             potionUse={potionUseFunc}
             pokeballUse={pokeballUseFunc}
+            lost={fightloss}
+            flee={flee}
           />
         </div>
         <div className="enemyDiv">
@@ -313,16 +330,21 @@ function Fight() {
             img={enemy.img}
             enemyAttack={enemyAttacking}
             win={fightWin}
+            caught={enemyCaught}
           />
           <PokemonStats
             stats={enemy}
             advantage={advantage !== null ? !advantage : null}
             userAttack={userAttacking}
             win={fightWin}
+            caught={enemyCaught}
           />
         </div>
       </div>
-      <div className="fightBtnsDiv">
+      <div
+        className="fightBtnsDiv"
+        style={encounterStart ? { display: "none" } : { display: "flex" }}
+      >
         <button className="startFightBtn" onClick={startTheFight}>
           Fight
         </button>

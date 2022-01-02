@@ -40,7 +40,9 @@ function PokemonList() {
         attack: pokemonList[randInt].attack,
         ability: pokemonList[randInt].ability,
       };
-      starterPokes.push(starterObject);
+      if (!starterPokes.some((pokes) => pokes.name === starterObject.name)) {
+        starterPokes.push(starterObject);
+      }
     }
     setUserChoice(starterPokes);
     setStart(true);
