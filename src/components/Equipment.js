@@ -2,25 +2,25 @@ import "../styles/Equipment.css";
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { ItemsListContext } from "../contexts/itemContexts/ItemsListContext";
+import { CurrentPokemonContext } from "../contexts/pokemonContexts/CurrentPokemonContext";
 
 function Equipment() {
-  const { itemsList, getItem, removeItem } = useContext(ItemsListContext);
+  const { itemsList, removeItem, potion } = useContext(ItemsListContext);
+  const { currentPokemon, changeStats } = useContext(CurrentPokemonContext);
 
-  const lootItem = (item) => {
-    return getItem(item);
+  const potionHeal = (pokemon, health) => {
+    return changeStats(pokemon, health);
   };
 
-  const lootItemFunc = () => {
-    const randInt = Math.floor(Math.random() * itemsList.length);
-    lootItem(itemsList[randInt]);
-  };
+  const hpAfterHealing = currentPokemon.health + 25;
 
-  const useItem = (item) => {
+  const usePotion = (item) => {
     return removeItem(item);
   };
 
-  const useItemFunc = (item) => {
-    useItem(itemsList[1]);
+  const usePotionFunc = () => {
+    usePotion(potion);
+    potionHeal(currentPokemon, hpAfterHealing);
   };
 
   return (
@@ -28,7 +28,9 @@ function Equipment() {
       <div className="navLinksScd">
         <Link to="/">Home</Link>
       </div>
-      <h2 className="equipmentHeading">Your items</h2>
+      <h2 onClick={usePotionFunc} className="equipmentHeading">
+        Your items
+      </h2>
       <div className="itemsDiv">
         {itemsList.map((item) => {
           return (

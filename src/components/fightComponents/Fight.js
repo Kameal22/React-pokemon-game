@@ -21,7 +21,7 @@ function Fight() {
   const { pokemonList } = useContext(PokemonListContext);
   const { currentPokemon, changeStats } = useContext(CurrentPokemonContext);
   const { discoverPokemon } = useContext(OwnedPokemonContext);
-  const { itemsList } = useContext(ItemsListContext);
+  const { itemsList, getItem, potion, pokeball } = useContext(ItemsListContext);
 
   const [enemy, setEnemy] = useState({});
   const [encounterStart, setEncounterStart] = useState(false);
@@ -70,6 +70,15 @@ function Fight() {
 
   const potionHeal = (pokemon, health) => {
     return changeStats(pokemon, health);
+  };
+
+  const lootItem = (item) => {
+    return getItem(item);
+  };
+
+  const lootItemFunc = () => {
+    const randInt = Math.floor(Math.random() * itemsList.length);
+    lootItem(itemsList[randInt]);
   };
 
   const userHpAfterAtt = enemyAtt(
@@ -255,6 +264,7 @@ function Fight() {
       enemyTurnFunc();
     } else if (enemy.health <= 0) {
       setFightWin(true);
+      lootItemFunc();
       expUp(10);
       setTimeout(() => {
         navigate(`/FightPage`, { replace: true });
@@ -299,9 +309,9 @@ function Fight() {
           <div style={fightloss ? { display: "none" } : { display: "flex" }}>
             <img
               style={pokeballThrow ? { transform: "translateX(300px)" } : null}
-              src={itemsList[0].img}
+              src={pokeball.img}
             ></img>
-            <img src={itemsList[1].img}></img>
+            <img src={potion.img}></img>
             <p
               style={
                 potionUse

@@ -14,7 +14,7 @@ function PokemonList() {
   const { currentPokemon, changePokemon } = useContext(CurrentPokemonContext);
   const { discoverPokemon } = useContext(OwnedPokemonContext);
   const { pokemonList } = useContext(PokemonListContext);
-  const { itemsList, getItem } = useContext(ItemsListContext);
+  const { itemsList, setInitialList } = useContext(ItemsListContext);
 
   useEffect(() => {
     checkPokemonHealth();
@@ -56,8 +56,8 @@ function PokemonList() {
     return discoverPokemon(pokemon);
   };
 
-  const addItems = (item) => {
-    return getItem(item);
+  const setInitialItems = (item) => {
+    return setInitialList(item);
   };
 
   const chooseStarterPokemon = (pokemon) => {
@@ -69,7 +69,7 @@ function PokemonList() {
 
     pokemonList[currPoke].discovered = true;
 
-    addItems(itemsList);
+    setInitialItems(itemsList);
     window.localStorage.setItem(
       "currentPokemonName",
       JSON.stringify(pokemon.name)

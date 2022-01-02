@@ -5,6 +5,9 @@ export const ItemsListContext = createContext();
 export function ItemsListModifier(props) {
   const [itemsList, setItemsList] = useState([]);
 
+  const potion = itemsList.find((item) => item.name === "potion");
+  const pokeball = itemsList.find((item) => item.name === "poke-ball");
+
   const setInitialList = (itemsList) => {
     setItemsList(itemsList);
   };
@@ -26,6 +29,8 @@ export function ItemsListModifier(props) {
         itemsList,
         getItem,
         removeItem,
+        potion,
+        pokeball,
       }}
     >
       {props.children}
