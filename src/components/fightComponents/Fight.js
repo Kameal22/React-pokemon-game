@@ -251,7 +251,7 @@ function Fight() {
   };
 
   const checkUserDeath = () => {
-    if (currentPokemon.health < 0) {
+    if (currentPokemon.health <= 0) {
       setFightLoss(true);
       setTimeout(() => {
         navigate(`/FightPage`, { replace: true });
