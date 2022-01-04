@@ -46,3 +46,20 @@
   right: 25%;
   width: 2.5em;
 }
+
+.numPotions {
+  position: absolute;
+  left: 30%;
+  bottom: 35%;
+}
+
+.numPokebals {
+  position: absolute;
+  right: 30%;
+  bottom: 35%;
+}
+
+.numAntidotes {
+  position: absolute;
+  bottom: 35%;
+}

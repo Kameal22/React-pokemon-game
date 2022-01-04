@@ -7,9 +7,11 @@ export function ItemsListModifier(props) {
 
   const potion = itemsList.find((item) => item.name === "potion");
   const pokeball = itemsList.find((item) => item.name === "poke-ball");
-  const antidote = itemsList.fing((item) => item.name === "antidote");
+  const antidote = itemsList.find((item) => item.name === "antidote");
 
-  const countPotions = () => {};
+  const potionsArray = itemsList.filter((value) => value.name === "potion");
+  const pokeballArray = itemsList.filter((value) => value.name === "poke-ball");
+  const antidoteArray = itemsList.filter((value) => value.name === "antidote");
 
   const setInitialList = (itemsList) => {
     setItemsList(itemsList);
@@ -34,6 +36,10 @@ export function ItemsListModifier(props) {
         removeItem,
         potion,
         pokeball,
+        antidote,
+        potionsArray,
+        pokeballArray,
+        antidoteArray,
       }}
     >
       {props.children}

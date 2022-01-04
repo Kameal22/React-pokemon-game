@@ -5,7 +5,14 @@ import { ItemsListContext } from "../contexts/itemContexts/ItemsListContext";
 import { CurrentPokemonContext } from "../contexts/pokemonContexts/CurrentPokemonContext";
 
 function Equipment() {
-  const { itemsList, removeItem, potion } = useContext(ItemsListContext);
+  const {
+    itemsList,
+    removeItem,
+    potion,
+    potionsArray,
+    pokeballArray,
+    antidoteArray,
+  } = useContext(ItemsListContext);
   const { currentPokemon, changeStats } = useContext(CurrentPokemonContext);
 
   const potionHeal = (pokemon, health) => {
@@ -28,7 +35,10 @@ function Equipment() {
       <div className="navLinksScd">
         <Link to="/">Home</Link>
       </div>
-      <h2 onClick={() => console.log(potion)} className="equipmentHeading">
+      <h2
+        onClick={() => console.log(potionsArray)}
+        className="equipmentHeading"
+      >
         Your items
       </h2>
       <div className="itemsDiv">
@@ -42,6 +52,9 @@ function Equipment() {
             />
           );
         })}
+        <p className="numPotions">{potionsArray.length}</p>
+        <p className="numPokebals">{pokeballArray.length}</p>
+        <p className="numAntidotes">{antidoteArray.length}</p>
       </div>
     </div>
   );
