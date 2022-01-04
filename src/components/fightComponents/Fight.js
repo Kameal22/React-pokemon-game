@@ -21,7 +21,8 @@ function Fight() {
   const { pokemonList } = useContext(PokemonListContext);
   const { currentPokemon, changeStats } = useContext(CurrentPokemonContext);
   const { discoverPokemon } = useContext(OwnedPokemonContext);
-  const { itemsList, getItem, potion, pokeball } = useContext(ItemsListContext);
+  const { itemsList, getItem, potion, pokeball, removeItem } =
+    useContext(ItemsListContext);
 
   const [enemy, setEnemy] = useState({});
   const [encounterStart, setEncounterStart] = useState(false);

@@ -7,6 +7,9 @@ export function ItemsListModifier(props) {
 
   const potion = itemsList.find((item) => item.name === "potion");
   const pokeball = itemsList.find((item) => item.name === "poke-ball");
+  const antidote = itemsList.fing((item) => item.name === "antidote");
+
+  const countPotions = () => {};
 
   const setInitialList = (itemsList) => {
     setItemsList(itemsList);

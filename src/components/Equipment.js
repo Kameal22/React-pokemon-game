@@ -28,14 +28,14 @@ function Equipment() {
       <div className="navLinksScd">
         <Link to="/">Home</Link>
       </div>
-      <h2 onClick={usePotionFunc} className="equipmentHeading">
+      <h2 onClick={() => console.log(potion)} className="equipmentHeading">
         Your items
       </h2>
       <div className="itemsDiv">
         {itemsList.map((item) => {
           return (
             <img
-              className="itemImg"
+              className={item.name}
               src={item.img}
               alt={item.name}
               key={item.name}
