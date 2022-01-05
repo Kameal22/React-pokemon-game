@@ -21,12 +21,12 @@ function Equipment() {
 
   const hpAfterHealing = currentPokemon.health + 25;
 
-  const usePotion = (item) => {
+  const consumePotion = (item) => {
     return removeItem(item);
   };
 
-  const usePotionFunc = () => {
-    usePotion(potion);
+  const consumePotionFunc = () => {
+    consumePotion(potion);
     potionHeal(currentPokemon, hpAfterHealing);
   };
 
@@ -36,7 +36,7 @@ function Equipment() {
         <Link to="/">Home</Link>
       </div>
       <h2
-        onClick={() => console.log(potionsArray)}
+        onClick={() => console.log(consumePotionFunc())}
         className="equipmentHeading"
       >
         Your items

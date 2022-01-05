@@ -83,3 +83,25 @@
 .icons {
   cursor: pointer;
 }
+
+.pokeAmmount {
+  color: ivory;
+  margin-top: -0.5vh;
+  margin-left: 0.5em;
+  text-align: center;
+  width: 15%;
+}
+
+.potionAmmount {
+  color: ivory;
+  margin-top: -0.5vh;
+  margin-right: 0.5em;
+  text-align: center;
+  width: 15%;
+}
+
+.ammountsDiv {
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+}

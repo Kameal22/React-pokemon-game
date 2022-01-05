@@ -27,6 +27,8 @@ export function ItemsListModifier(props) {
     setItemsList(filteredArray);
   };
 
+  //REMOVES ALL ITEMS WITH THIS NAME!!
+
   return (
     <ItemsListContext.Provider
       value={{

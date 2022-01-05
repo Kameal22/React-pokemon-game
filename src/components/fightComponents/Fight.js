@@ -21,8 +21,15 @@ function Fight() {
   const { pokemonList } = useContext(PokemonListContext);
   const { currentPokemon, changeStats } = useContext(CurrentPokemonContext);
   const { discoverPokemon } = useContext(OwnedPokemonContext);
-  const { itemsList, getItem, potion, pokeball, removeItem } =
-    useContext(ItemsListContext);
+  const {
+    itemsList,
+    getItem,
+    potion,
+    pokeball,
+    removeItem,
+    potionsArray,
+    pokeballArray,
+  } = useContext(ItemsListContext);
 
   const [enemy, setEnemy] = useState({});
   const [encounterStart, setEncounterStart] = useState(false);
@@ -67,6 +74,10 @@ function Fight() {
 
   const absorbEnemyAttack = (pokemon, health) => {
     return changeStats(pokemon, health);
+  };
+
+  const consumePotion = (potion) => {
+    return removeItem(potion);
   };
 
   const potionHeal = (pokemon, health) => {
@@ -240,6 +251,7 @@ function Fight() {
     return new Promise((resolve) => {
       setTimeout(() => {
         potionHeal(currentPokemon, userHpAfterHealing);
+        // consumePotion(potion);
         setPotionUse(false);
         resolve();
       }, 1000);
@@ -299,7 +311,9 @@ function Fight() {
 
   return (
     <div className="fightDiv">
-      <h2 className="fightHeading">Fight</h2>
+      <h2 onClick={() => console.log(itemsList)} className="fightHeading">
+        Fight
+      </h2>
       <div className="startedFightDiv">
         <div className="userDiv">
           <PokemonImgs
@@ -307,7 +321,10 @@ function Fight() {
             userAttack={userAttacking}
             lost={fightloss}
           />
-          <div style={fightloss ? { display: "none" } : { display: "flex" }}>
+          <div
+            className="potionPokeballDiv"
+            style={fightloss ? { display: "none" } : { display: "flex" }}
+          >
             <img
               style={pokeballThrow ? { transform: "translateX(300px)" } : null}
               src={pokeball.img}
@@ -316,12 +333,16 @@ function Fight() {
             <p
               style={
                 potionUse
-                  ? { display: "block", color: "green", fontSize: "0.5em" }
+                  ? { display: "block", color: "green", fontSize: "0.6em" }
                   : { display: "none" }
               }
             >
               + 25 hp!
             </p>
+          </div>
+          <div className="ammountsDiv">
+            <p className="pokeAmmount">{pokeballArray.length}</p>
+            <p className="potionAmmount">{potionsArray.length}</p>
           </div>
           <PokemonStats
             stats={currentPokemon}
