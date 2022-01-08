@@ -12,7 +12,7 @@ function PokemonList() {
   const [death, setDeath] = useState(false);
 
   const { currentPokemon, changePokemon } = useContext(CurrentPokemonContext);
-  const { discoverPokemon } = useContext(OwnedPokemonContext);
+  const { discoverPokemon, setPokemonMaxHp } = useContext(OwnedPokemonContext);
   const { pokemonList } = useContext(PokemonListContext);
   const { itemsList, setInitialList } = useContext(ItemsListContext);
 
@@ -56,6 +56,10 @@ function PokemonList() {
     return discoverPokemon(pokemon);
   };
 
+  const discoverNewPokemonsMaxHp = (name, health) => {
+    return setPokemonMaxHp(name, health);
+  };
+
   const setInitialItems = (item) => {
     return setInitialList(item);
   };
@@ -63,6 +67,7 @@ function PokemonList() {
   const chooseStarterPokemon = (pokemon) => {
     changeCurrentPokemon(pokemon);
     discoverNewPokemon(pokemon);
+    discoverNewPokemonsMaxHp(pokemon.name, pokemon.health);
     const currPoke = pokemonList.findIndex(
       (poke) => poke.name === pokemon.name
     );

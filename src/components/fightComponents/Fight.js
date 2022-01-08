@@ -20,16 +20,10 @@ function Fight() {
   const { expUpFunc } = useContext(CharacterContext);
   const { pokemonList } = useContext(PokemonListContext);
   const { currentPokemon, changeStats } = useContext(CurrentPokemonContext);
-  const { discoverPokemon } = useContext(OwnedPokemonContext);
-  const {
-    itemsList,
-    getItem,
-    potion,
-    pokeball,
-    removeItem,
-    potionsArray,
-    pokeballArray,
-  } = useContext(ItemsListContext);
+  const { discoverPokemon, setPokemonMaxHp, ownedPokemonHp } =
+    useContext(OwnedPokemonContext);
+  const { itemsList, getItem, potion, pokeball, removeItem } =
+    useContext(ItemsListContext);
 
   const [enemy, setEnemy] = useState({});
   const [encounterStart, setEncounterStart] = useState(false);
@@ -48,10 +42,6 @@ function Fight() {
 
   const navigate = useNavigate();
 
-  const expUp = (value) => {
-    return expUpFunc(value);
-  };
-
   useEffect(() => {
     showEnemy();
   }, []);
@@ -67,6 +57,10 @@ function Fight() {
   useEffect(() => {
     checkUserDeath();
   }, [scdFightHelperState]);
+
+  const expUp = (value) => {
+    return expUpFunc(value);
+  };
 
   const discoverNewPokemon = (pokemon) => {
     return discoverPokemon(pokemon);
@@ -91,6 +85,18 @@ function Fight() {
   const lootItemFunc = () => {
     const randInt = Math.floor(Math.random() * itemsList.length);
     lootItem(itemsList[randInt]);
+  };
+
+  const discoverNewPokemonsMaxHp = (name, health) => {
+    return setPokemonMaxHp(name, health);
+  };
+
+  const getCurrentMaxHp = () => {
+    const currentPokeStat = ownedPokemonHp.find(
+      (pokemon) => pokemon.name === currentPokemon.name
+    );
+
+    return currentPokeStat.health;
   };
 
   const userHpAfterAtt = enemyAtt(
@@ -222,6 +228,7 @@ function Fight() {
       if (Math.random() < 0.5) {
         setTimeout(() => {
           discoverNewPokemon(enemy);
+          discoverNewPokemonsMaxHp(enemy.name, enemy.health);
           setEnemyCaught(true);
           setPokeballThrow(false);
           setTimeout(() => {
@@ -311,7 +318,10 @@ function Fight() {
 
   return (
     <div className="fightDiv">
-      <h2 onClick={() => console.log(itemsList)} className="fightHeading">
+      <h2
+        onClick={() => console.log(getCurrentMaxHp())}
+        className="fightHeading"
+      >
         Fight
       </h2>
       <div className="startedFightDiv">
@@ -333,7 +343,7 @@ function Fight() {
             <p
               style={
                 potionUse
-                  ? { display: "block", color: "green", fontSize: "0.6em" }
+                  ? { display: "block", color: "green", fontSize: "0.7em" }
                   : { display: "none" }
               }
             >
@@ -341,8 +351,8 @@ function Fight() {
             </p>
           </div>
           <div className="ammountsDiv">
-            <p className="pokeAmmount">{pokeballArray.length}</p>
-            <p className="potionAmmount">{potionsArray.length}</p>
+            <p className="pokeAmmount">asd</p>
+            <p className="potionAmmount">asd</p>
           </div>
           <PokemonStats
             stats={currentPokemon}

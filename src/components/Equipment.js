@@ -5,15 +5,16 @@ import { ItemsListContext } from "../contexts/itemContexts/ItemsListContext";
 import { CurrentPokemonContext } from "../contexts/pokemonContexts/CurrentPokemonContext";
 
 function Equipment() {
-  const {
-    itemsList,
-    removeItem,
-    potion,
-    potionsArray,
-    pokeballArray,
-    antidoteArray,
-  } = useContext(ItemsListContext);
+  const { itemsList, removeItem, potion } = useContext(ItemsListContext);
   const { currentPokemon, changeStats } = useContext(CurrentPokemonContext);
+
+  const potionsAmmount = itemsList.filter((value) => value.name === "potion");
+  const pokeballAmmount = itemsList.filter(
+    (value) => value.name === "poke-ball"
+  );
+  const antidoteAmmount = itemsList.filter(
+    (value) => value.name === "antidote"
+  );
 
   const potionHeal = (pokemon, health) => {
     return changeStats(pokemon, health);
@@ -26,7 +27,10 @@ function Equipment() {
   };
 
   const consumePotionFunc = () => {
-    consumePotion(potion);
+    if (itemsList.indexOf(potion) !== -1) {
+      consumePotion(potion);
+      console.log("consumed");
+    }
     potionHeal(currentPokemon, hpAfterHealing);
   };
 
@@ -35,10 +39,7 @@ function Equipment() {
       <div className="navLinksScd">
         <Link to="/">Home</Link>
       </div>
-      <h2
-        onClick={() => console.log(consumePotionFunc())}
-        className="equipmentHeading"
-      >
+      <h2 onClick={() => consumePotionFunc()} className="equipmentHeading">
         Your items
       </h2>
       <div className="itemsDiv">
@@ -52,9 +53,9 @@ function Equipment() {
             />
           );
         })}
-        <p className="numPotions">{potionsArray.length}</p>
-        <p className="numPokebals">{pokeballArray.length}</p>
-        <p className="numAntidotes">{antidoteArray.length}</p>
+        <p className="numPotions">{potionsAmmount.length}</p>
+        <p className="numPokebals">{pokeballAmmount.length}</p>
+        <p className="numAntidotes">{antidoteAmmount.length}</p>
       </div>
     </div>
   );

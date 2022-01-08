@@ -30,15 +30,7 @@ function FetchItem() {
           });
           const actualItems = [
             fetchedItems[3],
-            fetchedItems[3],
-            fetchedItems[3],
-            fetchedItems[3],
-            fetchedItems[3],
             fetchedItems[16],
-            fetchedItems[16],
-            fetchedItems[16],
-            fetchedItems[16],
-            fetchedItems[17],
             fetchedItems[17],
           ];
           sentListToContext(actualItems);

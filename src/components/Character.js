@@ -7,7 +7,7 @@ import { CharacterContext } from "../contexts/playerContexts/CharacterContexts";
 import { PokemonListContext } from "../contexts/pokemonContexts/PokemonListContext";
 
 function Character() {
-  const { ownedPokemon } = useContext(OwnedPokemonContext);
+  const { ownedPokemon, ownedPokemonHp } = useContext(OwnedPokemonContext);
   const { currentPokemon, changePokemon } = useContext(CurrentPokemonContext);
   const { level, exp, requiredExp } = useContext(CharacterContext);
   const { pokemonList } = useContext(PokemonListContext);
@@ -24,7 +24,12 @@ function Character() {
       <div className="navLinksScd">
         <Link to="/">Home</Link>
       </div>
-      <h2 className="characterHeading">Character</h2>
+      <h2
+        onClick={() => console.log(ownedPokemonHp)}
+        className="characterHeading"
+      >
+        Character
+      </h2>
       <div className="characterDiv">
         <h3>username here</h3>
         <p>Level : {level}</p>

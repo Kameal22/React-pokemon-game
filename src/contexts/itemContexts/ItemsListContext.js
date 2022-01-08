@@ -9,10 +9,6 @@ export function ItemsListModifier(props) {
   const pokeball = itemsList.find((item) => item.name === "poke-ball");
   const antidote = itemsList.find((item) => item.name === "antidote");
 
-  const potionsArray = itemsList.filter((value) => value.name === "potion");
-  const pokeballArray = itemsList.filter((value) => value.name === "poke-ball");
-  const antidoteArray = itemsList.filter((value) => value.name === "antidote");
-
   const setInitialList = (itemsList) => {
     setItemsList(itemsList);
   };
@@ -23,11 +19,12 @@ export function ItemsListModifier(props) {
   };
 
   const removeItem = (usedItem) => {
-    let filteredArray = itemsList.filter((item) => item !== usedItem);
-    setItemsList(filteredArray);
+    itemsList.splice(
+      itemsList.findIndex((item) => item === usedItem),
+      1
+    );
+    setItemsList(itemsList);
   };
-
-  //REMOVES ALL ITEMS WITH THIS NAME!!
 
   return (
     <ItemsListContext.Provider
@@ -39,9 +36,6 @@ export function ItemsListModifier(props) {
         potion,
         pokeball,
         antidote,
-        potionsArray,
-        pokeballArray,
-        antidoteArray,
       }}
     >
       {props.children}

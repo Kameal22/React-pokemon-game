@@ -50,16 +50,16 @@
 .numPotions {
   position: absolute;
   left: 30%;
-  bottom: 35%;
+  bottom: 30%;
 }
 
 .numPokebals {
   position: absolute;
   right: 30%;
-  bottom: 35%;
+  bottom: 30%;
 }
 
 .numAntidotes {
   position: absolute;
-  bottom: 35%;
+  bottom: 30%;
 }
