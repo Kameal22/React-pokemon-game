@@ -59,8 +59,12 @@ function PokemonStats(props) {
         <div className="pokemonStatsDiv">
           <p onClick={basicAttack}>Normal attack</p>
           <p onClick={abilityAttack}>{props.stats.ability}</p>
-          <p onClick={potionUse}>Use potion</p>
-          <p onClick={pokeballUse}>Use pokeball</p>
+          {props.potionsAmmount.length > 0 ? (
+            <p onClick={potionUse}>Use potion</p>
+          ) : null}
+          {props.pokeballsAmmount.length > 0 ? (
+            <p onClick={pokeballUse}>Use pokeball</p>
+          ) : null}
           <p onClick={testFlee}>Flee</p>
         </div>
       );

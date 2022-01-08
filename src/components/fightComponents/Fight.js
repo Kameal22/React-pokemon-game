@@ -71,7 +71,15 @@ function Fight() {
   };
 
   const consumePotion = (potion) => {
-    return removeItem(potion);
+    if (itemsList.indexOf(potion) !== -1) {
+      return removeItem(potion);
+    }
+  };
+
+  const consumePokeball = (pokeball) => {
+    if (itemsList.indexOf(pokeball) !== -1) {
+      return removeItem(pokeball);
+    }
   };
 
   const potionHeal = (pokemon, health) => {
@@ -117,7 +125,19 @@ function Fight() {
     enemy.health
   );
 
-  const userHpAfterHealing = usePotion(currentPokemon.health, 25);
+  const userHpAfterHealing = usePotion(
+    currentPokemon.health,
+    25,
+    getCurrentMaxHp()
+  );
+
+  const potionsAmmount = itemsList.filter((value) => value.name === "potion");
+  const pokeballAmmount = itemsList.filter(
+    (value) => value.name === "poke-ball"
+  );
+  const antidoteAmmount = itemsList.filter(
+    (value) => value.name === "antidote"
+  );
 
   const showEnemy = () => {
     const randInt = Math.floor(Math.random() * pokemonList.length);
@@ -231,6 +251,7 @@ function Fight() {
           discoverNewPokemonsMaxHp(enemy.name, enemy.health);
           setEnemyCaught(true);
           setPokeballThrow(false);
+          consumePokeball(pokeball);
           setTimeout(() => {
             navigate(`/FightPage`, { replace: true });
           }, 1500);
@@ -258,7 +279,7 @@ function Fight() {
     return new Promise((resolve) => {
       setTimeout(() => {
         potionHeal(currentPokemon, userHpAfterHealing);
-        // consumePotion(potion);
+        consumePotion(potion);
         setPotionUse(false);
         resolve();
       }, 1000);
@@ -318,12 +339,7 @@ function Fight() {
 
   return (
     <div className="fightDiv">
-      <h2
-        onClick={() => console.log(getCurrentMaxHp())}
-        className="fightHeading"
-      >
-        Fight
-      </h2>
+      <h2 className="fightHeading">Fight</h2>
       <div className="startedFightDiv">
         <div className="userDiv">
           <PokemonImgs
@@ -337,9 +353,9 @@ function Fight() {
           >
             <img
               style={pokeballThrow ? { transform: "translateX(300px)" } : null}
-              src={pokeball.img}
+              src={pokeballAmmount.length > 0 ? pokeball.img : null}
             ></img>
-            <img src={potion.img}></img>
+            <img src={potionsAmmount.length > 0 ? potion.img : null}></img>
             <p
               style={
                 potionUse
@@ -351,8 +367,12 @@ function Fight() {
             </p>
           </div>
           <div className="ammountsDiv">
-            <p className="pokeAmmount">asd</p>
-            <p className="potionAmmount">asd</p>
+            {pokeballAmmount.length > 0 ? (
+              <p className="pokeAmmount">{pokeballAmmount.length}</p>
+            ) : null}
+            {potionsAmmount.length > 0 ? (
+              <p className="potionAmmount">{potionsAmmount.length}</p>
+            ) : null}
           </div>
           <PokemonStats
             stats={currentPokemon}
@@ -362,6 +382,8 @@ function Fight() {
             basicAttack={basicAttackFunc}
             abilityAttack={abilityAttackFunc}
             potionUse={potionUseFunc}
+            potionsAmmount={potionsAmmount}
+            pokeballsAmmount={pokeballAmmount}
             pokeballUse={pokeballUseFunc}
             lost={fightloss}
             flee={flee}

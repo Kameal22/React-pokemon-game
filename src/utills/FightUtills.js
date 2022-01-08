@@ -62,9 +62,13 @@ const userSpecialAtt = (userAtt, enemyDef, enemyHp) => {
   return hpAfterAbility;
 };
 
-const usePotion = (userHp, potionHeal) => {
+const usePotion = (userHp, potionHeal, maxPosibleHp) => {
   let hpAfterHealing = userHp + potionHeal;
-  return hpAfterHealing;
+  if (hpAfterHealing < maxPosibleHp) {
+    return hpAfterHealing;
+  } else if (hpAfterHealing >= maxPosibleHp) {
+    return maxPosibleHp;
+  }
 };
 
 export { checkAdvantage, enemyAtt, userAtt, usePotion, userSpecialAtt };

@@ -29,7 +29,6 @@ function Equipment() {
   const consumePotionFunc = () => {
     if (itemsList.indexOf(potion) !== -1) {
       consumePotion(potion);
-      console.log("consumed");
     }
     potionHeal(currentPokemon, hpAfterHealing);
   };
