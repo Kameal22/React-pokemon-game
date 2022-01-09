@@ -13,6 +13,7 @@ import FetchPokemon from "./utills/FetchPokemon";
 import FetchItems from "./utills/FetchItems";
 import { ItemsListModifier } from "./contexts/itemContexts/ItemsListContext";
 import { CharacterModifier } from "./contexts/playerContexts/CharacterContexts";
+import FightSummary from "./components/fightComponents/FightSummary";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
                     <Route path="Equipment" element={<Equipment />} />
                     <Route path="Character" element={<Character />} />
                     <Route path="FightPage" element={<FightPage />} />
+                    <Route path="FightSummary" element={<FightSummary />} />
                     <Route path="Fight" element={<Fight />} />
                     <Route
                       path="*"

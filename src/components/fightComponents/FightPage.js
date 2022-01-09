@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import React, { useContext, useState, useEffect } from "react";
 import { CurrentPokemonContext } from "../../contexts/pokemonContexts/CurrentPokemonContext";
 
-function Fight() {
+function FightPage() {
   const [death, setDeath] = useState(false);
   const { currentPokemon } = useContext(CurrentPokemonContext);
 
@@ -37,4 +37,4 @@ function Fight() {
     </div>
   );
 }
-export default Fight;
+export default FightPage;

@@ -17,12 +17,11 @@ import { ItemsListContext } from "../../contexts/itemContexts/ItemsListContext";
 import PokemonImgs from "./PokemonImg";
 
 function Fight() {
-  const { expUpFunc } = useContext(CharacterContext);
   const { pokemonList } = useContext(PokemonListContext);
   const { currentPokemon, changeStats } = useContext(CurrentPokemonContext);
   const { discoverPokemon, setPokemonMaxHp, ownedPokemonHp } =
     useContext(OwnedPokemonContext);
-  const { itemsList, getItem, potion, pokeball, removeItem } =
+  const { itemsList, potion, pokeball, removeItem } =
     useContext(ItemsListContext);
 
   const [enemy, setEnemy] = useState({});
@@ -58,10 +57,6 @@ function Fight() {
     checkUserDeath();
   }, [scdFightHelperState]);
 
-  const expUp = (value) => {
-    return expUpFunc(value);
-  };
-
   const discoverNewPokemon = (pokemon) => {
     return discoverPokemon(pokemon);
   };
@@ -84,15 +79,6 @@ function Fight() {
 
   const potionHeal = (pokemon, health) => {
     return changeStats(pokemon, health);
-  };
-
-  const lootItem = (item) => {
-    return getItem(item);
-  };
-
-  const lootItemFunc = () => {
-    const randInt = Math.floor(Math.random() * itemsList.length);
-    lootItem(itemsList[randInt]);
   };
 
   const discoverNewPokemonsMaxHp = (name, health) => {
@@ -134,9 +120,6 @@ function Fight() {
   const potionsAmmount = itemsList.filter((value) => value.name === "potion");
   const pokeballAmmount = itemsList.filter(
     (value) => value.name === "poke-ball"
-  );
-  const antidoteAmmount = itemsList.filter(
-    (value) => value.name === "antidote"
   );
 
   const showEnemy = () => {
@@ -305,10 +288,8 @@ function Fight() {
       enemyTurnFunc();
     } else if (enemy.health <= 0) {
       setFightWin(true);
-      lootItemFunc();
-      expUp(10);
       setTimeout(() => {
-        navigate(`/FightPage`, { replace: true });
+        navigate(`/FightSummary`, { replace: true });
       }, 1500);
     }
   };
