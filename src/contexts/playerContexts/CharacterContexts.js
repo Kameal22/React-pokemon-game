@@ -1,18 +1,36 @@
 import React, { createContext, useState } from "react";
+import { useEffect } from "react/cjs/react.development";
 
 export const CharacterContext = createContext();
 
 export function CharacterModifier(props) {
   const [level, levelUp] = useState(1);
   const [exp, expUp] = useState(0);
-  const [requiredExp] = useState(10);
+  const [requiredExp, setRequiredExp] = useState(10);
+  const [canLevelUp, setLevelingUp] = useState(false);
 
-  const levelUpFunc = (level) => {
-    levelUp(level + 1);
+  useEffect(() => {
+    checkIfCanLevelUp();
+  }, [exp]);
+
+  const levelUpFunc = (value) => {
+    levelUp(level + value);
+    addRequiredExp();
+    setLevelingUp(false);
   };
 
   const expUpFunc = (value) => {
     expUp(exp + value);
+  };
+
+  const checkIfCanLevelUp = () => {
+    if (exp >= requiredExp) {
+      setLevelingUp(true);
+    }
+  };
+
+  const addRequiredExp = () => {
+    setRequiredExp(requiredExp * 2);
   };
 
   return (
@@ -23,6 +41,7 @@ export function CharacterModifier(props) {
         exp,
         expUpFunc,
         requiredExp,
+        canLevelUp,
       }}
     >
       {props.children}

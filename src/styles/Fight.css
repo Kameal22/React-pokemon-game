@@ -105,3 +105,16 @@
   display: flex;
   justify-content: space-between;
 }
+
+.fightSummaryDiv {
+  border: 1px solid ivory;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: ivory;
+}
+
+.summaryBtn {
+  margin-bottom: 1vh;
+}

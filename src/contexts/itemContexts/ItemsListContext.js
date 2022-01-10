@@ -3,6 +3,7 @@ import React, { createContext, useState } from "react";
 export const ItemsListContext = createContext();
 
 export function ItemsListModifier(props) {
+  const [inGameItems, setInGameItems] = useState([]);
   const [itemsList, setItemsList] = useState([]);
 
   const potion = itemsList.find((item) => item.name === "potion");
@@ -11,6 +12,10 @@ export function ItemsListModifier(props) {
 
   const setInitialList = (itemsList) => {
     setItemsList(itemsList);
+  };
+
+  const setInitialGameItemsList = (inGameItems) => {
+    setInGameItems(inGameItems);
   };
 
   const getItem = (item) => {
@@ -30,7 +35,9 @@ export function ItemsListModifier(props) {
     <ItemsListContext.Provider
       value={{
         setInitialList,
+        setInitialGameItemsList,
         itemsList,
+        inGameItems,
         getItem,
         removeItem,
         potion,

@@ -7,9 +7,10 @@ import { CharacterContext } from "../contexts/playerContexts/CharacterContexts";
 import { PokemonListContext } from "../contexts/pokemonContexts/PokemonListContext";
 
 function Character() {
-  const { ownedPokemon, ownedPokemonHp } = useContext(OwnedPokemonContext);
+  const { ownedPokemon } = useContext(OwnedPokemonContext);
   const { currentPokemon, changePokemon } = useContext(CurrentPokemonContext);
-  const { level, exp, requiredExp } = useContext(CharacterContext);
+  const { level, levelUpFunc, exp, requiredExp, canLevelUp } =
+    useContext(CharacterContext);
   const { pokemonList } = useContext(PokemonListContext);
 
   const handleChange = (event) => {
@@ -19,26 +20,27 @@ function Character() {
     changePokemon(foundPokemon);
   };
 
+  const levelUp = (value) => {
+    return levelUpFunc(1);
+  };
+
   return (
     <div className="pokedexDiv">
       <div className="navLinksScd">
         <Link to="/">Home</Link>
       </div>
-      <h2
-        onClick={() => console.log(ownedPokemonHp)}
-        className="characterHeading"
-      >
-        Character
-      </h2>
+      <h2 className="characterHeading">Character</h2>
       <div className="characterDiv">
-        <h3>username here</h3>
         <p>Level : {level}</p>
+        <button onClick={levelUp} disabled={!canLevelUp}>
+          Level up!
+        </button>
         <p>Exp : {exp}</p>
         <p>
           Owned Pokemon : {ownedPokemon.length} of {pokemonList.length}
         </p>
         <p className="aditionalInfo">
-          {requiredExp} exp points to reach level 2
+          {requiredExp} exp points to reach level {level + 1}
         </p>
         <div className="currPokemonDiv">
           <p>Current Pokemon :</p>

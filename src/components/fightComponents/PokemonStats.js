@@ -73,7 +73,11 @@ function PokemonStats(props) {
         <div className="pokemonStatsDiv">
           <p>{props.stats.name}</p>
           <p style={advantageStyle}>{props.stats.type}</p>
-          <p style={attackingStyle}>{props.stats.health} Hp</p>
+          {props.potionUsed ? (
+            <p style={{ color: "green" }}>Hp up!</p>
+          ) : (
+            <p style={attackingStyle}>{props.stats.health} Hp</p>
+          )}
           <p style={advantageStyle}>{advantageDefense} Def</p>
           <p>{props.stats.attack} Att</p>
           <p>Ability: {props.stats.ability}</p>

@@ -2,7 +2,6 @@ import "../../styles/Fight.css";
 import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PokemonStats from "./PokemonStats";
-import { CharacterContext } from "../../contexts/playerContexts/CharacterContexts";
 import { PokemonListContext } from "../../contexts/pokemonContexts/PokemonListContext";
 import { CurrentPokemonContext } from "../../contexts/pokemonContexts/CurrentPokemonContext";
 import {
@@ -132,6 +131,7 @@ function Fight() {
     return new Promise((resolve) => {
       setTimeout(() => {
         setEnemyAttacking(true);
+        absorbEnemyAttack(currentPokemon, Math.round(userHpAfterAtt));
         resolve();
       }, 1000);
     });
@@ -140,7 +140,6 @@ function Fight() {
   const absorbEnemyAttackTurn = () => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        absorbEnemyAttack(currentPokemon, Math.round(userHpAfterAtt));
         setEnemyAttacking(false);
         setScdFightHelperState(!scdFightHelperState);
         resolve();
@@ -162,6 +161,10 @@ function Fight() {
       setUserMoving(false);
       setTimeout(() => {
         setUserAttacking(true);
+        setEnemy((prevStats) => ({
+          ...prevStats,
+          health: Math.round(enemyHpAfterAtt),
+        }));
         resolve();
       }, 1000);
     });
@@ -171,10 +174,6 @@ function Fight() {
     return new Promise((resolve) => {
       setTimeout(() => {
         setUserAttacking(false);
-        setEnemy((prevStats) => ({
-          ...prevStats,
-          health: Math.round(enemyHpAfterAtt),
-        }));
         resolve();
       }, 1000);
     });
@@ -207,10 +206,6 @@ function Fight() {
     return new Promise((resolve) => {
       setTimeout(() => {
         setUserAttacking(false);
-        setEnemy((prevStats) => ({
-          ...prevStats,
-          health: Math.round(enemyHpAfterAbility),
-        }));
         resolve();
       }, 1000);
     });
@@ -337,15 +332,6 @@ function Fight() {
               src={pokeballAmmount.length > 0 ? pokeball.img : null}
             ></img>
             <img src={potionsAmmount.length > 0 ? potion.img : null}></img>
-            <p
-              style={
-                potionUse
-                  ? { display: "block", color: "green", fontSize: "0.7em" }
-                  : { display: "none" }
-              }
-            >
-              + 25 hp!
-            </p>
           </div>
           <div className="ammountsDiv">
             {pokeballAmmount.length > 0 ? (
@@ -363,6 +349,7 @@ function Fight() {
             basicAttack={basicAttackFunc}
             abilityAttack={abilityAttackFunc}
             potionUse={potionUseFunc}
+            potionUsed={potionUse}
             potionsAmmount={potionsAmmount}
             pokeballsAmmount={pokeballAmmount}
             pokeballUse={pokeballUseFunc}

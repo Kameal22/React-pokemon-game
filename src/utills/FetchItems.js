@@ -5,10 +5,15 @@ import { ItemsListContext } from "../contexts/itemContexts/ItemsListContext";
 const API_URL_ITEMS = "https://pokeapi.co/api/v2/item/?limit=35&offset=0";
 
 function FetchItem() {
-  const { setInitialList } = useContext(ItemsListContext);
+  const { setInitialList, setInitialGameItemsList } =
+    useContext(ItemsListContext);
 
   const sentListToContext = (item) => {
     return setInitialList(item);
+  };
+
+  const setStartersListToContext = (item) => {
+    return setInitialGameItemsList(item);
   };
 
   useEffect(() => {
@@ -34,6 +39,7 @@ function FetchItem() {
             fetchedItems[17],
           ];
           sentListToContext(actualItems);
+          setStartersListToContext(actualItems);
         })
       );
     }
