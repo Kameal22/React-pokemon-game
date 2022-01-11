@@ -1,5 +1,6 @@
 import "./styles/App.css";
-import PokemonList from "./components/PokemonList.js";
+import StarterPokemonList from "./components/StarterPokemonList.js";
+import MainPage from "./components/MainPage.js";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PokemonSelector } from "./contexts/pokemonContexts/CurrentPokemonContext";
 import { OwnPokemon } from "./contexts/pokemonContexts/OwnedPokemonContext";
@@ -27,12 +28,13 @@ function App() {
                   <FetchPokemon />
                   <FetchItems />
                   <Routes>
-                    <Route path="/" element={<PokemonList />} />
+                    <Route path="/" element={<StarterPokemonList />} />
                     <Route path="Pokedex" element={<Pokedex />} />
                     <Route path="Equipment" element={<Equipment />} />
                     <Route path="Character" element={<Character />} />
                     <Route path="FightPage" element={<FightPage />} />
                     <Route path="FightSummary" element={<FightSummary />} />
+                    <Route path="MainPage" element={<MainPage />} />
                     <Route path="Fight" element={<Fight />} />
                     <Route
                       path="*"

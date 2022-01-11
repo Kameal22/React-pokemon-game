@@ -9,7 +9,7 @@ function Pokedex() {
   return (
     <div className="pokedexDiv">
       <div className="navLinksScd">
-        <Link to="/">Home</Link>
+        <Link to="/MainPage">Home</Link>
       </div>
       <div className="pokedex">
         <h2 className="pokedexHeading">Your Pokedex</h2>

@@ -9,7 +9,6 @@ export function OwnPokemon(props) {
   const discoverPokemon = (pokemon) => {
     pokemon.discovered = true;
     setOwnedPokemon((prevArr) => [...prevArr, pokemon]);
-    window.localStorage.setItem("ownedPokemons", JSON.stringify(pokemon));
   };
 
   const setPokemonMaxHp = (name, health) => {

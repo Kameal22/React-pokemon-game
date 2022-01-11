@@ -20,7 +20,7 @@ function FightPage() {
   return (
     <div className="fightDiv">
       <div className="navLinksScd">
-        <Link to="/">Home</Link>
+        <Link to="/MainPage">Home</Link>
       </div>
       <h2 className="fightHeading">Fight</h2>
       <div className="fightSelectingDiv">

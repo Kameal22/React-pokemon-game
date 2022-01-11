@@ -48,7 +48,7 @@ function Character() {
   return (
     <div className="pokedexDiv">
       <div className="navLinksScd">
-        <Link to="/">Home</Link>
+        <Link to="/MainPage">Home</Link>
       </div>
       <h2 className="characterHeading">Character</h2>
       <div className="characterDiv">
