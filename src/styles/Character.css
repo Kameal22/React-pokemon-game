@@ -32,3 +32,12 @@
 .changePokemonDiv p {
   margin-right: 2em;
 }
+
+.levelDiv {
+  display: flex;
+  justify-content: space-between;
+}
+
+.reward {
+  margin-right: 2em;
+}

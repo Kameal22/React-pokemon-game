@@ -57,6 +57,7 @@ function PokemonStats(props) {
     if (props.userTurn) {
       return (
         <div className="pokemonStatsDiv">
+          <p style={{ color: "red" }}>{props.stats.health} Hp</p>
           <p onClick={basicAttack}>Normal attack</p>
           <p onClick={abilityAttack}>{props.stats.ability}</p>
           {props.potionsAmmount.length > 0 ? (

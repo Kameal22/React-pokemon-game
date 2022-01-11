@@ -237,6 +237,7 @@ function Fight() {
       } else {
         setTimeout(() => {
           setPokeballThrow(false);
+          consumePokeball(pokeball);
           resolve();
         }, 1000);
       }
