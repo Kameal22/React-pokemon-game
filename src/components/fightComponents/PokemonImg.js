@@ -16,7 +16,7 @@ function PokemonImgs(props) {
   if (!props.win && !props.lost && !props.caught) {
     return (
       <div className="pokemonImgDiv">
-        <img style={attackingStyle} src={props.img}></img>
+        <img style={attackingStyle} src={props.img} alt={props.name}></img>
       </div>
     );
   } else if (props.win) {

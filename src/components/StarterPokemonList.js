@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import "../styles/PokemonList.css";
 import { useNavigate } from "react-router-dom";
 import { CurrentPokemonContext } from "../contexts/pokemonContexts/CurrentPokemonContext";
@@ -12,7 +12,7 @@ function PokemonList() {
 
   const navigate = useNavigate();
 
-  const { currentPokemon, changePokemon } = useContext(CurrentPokemonContext);
+  const { changePokemon } = useContext(CurrentPokemonContext);
   const { discoverPokemon, setPokemonMaxHp } = useContext(OwnedPokemonContext);
   const { pokemonList } = useContext(PokemonListContext);
   const { itemsList, setInitialList } = useContext(ItemsListContext);

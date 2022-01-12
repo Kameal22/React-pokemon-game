@@ -331,6 +331,7 @@ function Fight() {
             <img
               style={pokeballThrow ? { transform: "translateX(300px)" } : null}
               src={pokeballAmmount.length > 0 ? pokeball.img : null}
+              alt={pokeball.name}
             ></img>
             <img src={potionsAmmount.length > 0 ? potion.img : null}></img>
           </div>
